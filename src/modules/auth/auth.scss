@@ -1,0 +1,163 @@
+/* Variables de color estilo Institucional / CONCYTEQ */
+$primary-blue: #0A2540;
+$secondary-blue: #173A5E;
+$accent-gold: #F6C844;
+$bg-light: #F4F5F7;
+$white: #FFFFFF;
+$text-dark: #333333;
+$text-muted: #666666;
+$danger-red: #D32F2F;
+
+/* --- AUTH SCREENS (Login & Register) --- */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* Gradiente azul chido */
+  background: linear-gradient(135deg, $primary-blue 0%, $secondary-blue 100%);
+  padding: 20px; 
+}
+
+.auth-card {
+  background: $white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  animation: fadeIn 0.4s ease-out;
+
+  .logo-placeholder {
+    background: $bg-light;
+    color: $primary-blue;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    border: 1px dashed $secondary-blue;
+  }
+
+  h1 { 
+    color: $primary-blue; 
+    margin-bottom: 5px; 
+    font-size: 2rem;
+  }
+
+  .auth-subtitle {
+    color: $text-muted;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+  }
+
+  .error-message {
+    background-color: #ffebee;
+    color: $danger-red;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    border: 1px solid rgba($danger-red, 0.3);
+  }
+
+  .form-row {
+    display: flex;
+    gap: 15px;
+    
+    .input-group {
+      flex: 1;
+    }
+  }
+
+  .input-group {
+    text-align: left;
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+      color: $text-muted;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      
+      &:focus { 
+        border-color: $accent-gold; 
+        box-shadow: 0 0 0 3px rgba($accent-gold, 0.2);
+      }
+    }
+  }
+
+  .enter-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: $primary-blue;
+    color: $white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+
+    &:hover:not(:disabled) { 
+      background-color: $accent-gold; 
+      color: $primary-blue; 
+    }
+
+    &:disabled {
+      background-color: $text-muted;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+
+  .auth-footer {
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: $text-muted;
+
+    a {
+      color: $secondary-blue;
+      font-weight: bold;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+        color: $accent-gold;
+      }
+    }
+  }
+}
+
+/* --- RESPONSIVO --- */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 25px 20px;
+
+    .form-row {
+      flex-direction: column; 
+      gap: 0;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

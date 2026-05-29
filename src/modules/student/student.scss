@@ -1,0 +1,77 @@
+/* Variables importadas implícitamente de tu paleta principal */
+$primary-blue: #0A2540;
+$secondary-blue: #173A5E;
+$accent-gold: #F6C844;
+$bg-light: #F4F5F7;
+$white: #FFFFFF;
+$text-dark: #333333;
+$text-muted: #666666;
+
+.dashboard-layout {
+  min-height: 100vh;
+  background-color: $bg-light;
+}
+
+.dashboard-content {
+  padding: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .welcome-header {
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid rgba($primary-blue, 0.1);
+    padding-bottom: 1rem;
+
+    h1 {
+      color: $primary-blue;
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: $text-muted;
+      font-size: 1.1rem;
+    }
+  }
+
+  .feed-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .placeholder-card {
+      background-color: $white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border-left: 5px solid $accent-gold; /* Toque dorado para el estudiante */
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      h3 {
+        color: $secondary-blue;
+        margin-bottom: 0.75rem;
+        font-size: 1.4rem;
+      }
+
+      p {
+        color: $text-muted;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+/* Responsivo para celulares */
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 1.5rem;
+    
+    .welcome-header h1 {
+      font-size: 1.8rem;
+    }
+  }
+}

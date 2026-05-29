@@ -21,13 +21,6 @@ body {
 }
 
 /* --- LOGIN SCREEN --- */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, $primary-blue 0%, $secondary-blue 100%);
-}
 
 .login-card {
   background: $white;
@@ -89,92 +82,171 @@ body {
   }
 }
 
-/* --- NAVBAR --- */
+/* Estilos globales y compartidos */
 .navbar {
-  background-color: $white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  background-color: $primary-blue;
+  padding: 0.75rem 2rem;
+  color: $white;
 
   .nav-left {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 1.5rem;
 
-    .logo-box {
-      background-color: $bg-light;
-      padding: 8px 15px;
-      border-radius: 4px;
-      color: $primary-blue;
-      font-weight: bold;
-      border: 1px solid #ddd;
-    }
-
-    .nav-tab {
-      padding: 8px 16px;
+    .logo-btn {
+      background: none;
       border: none;
-      background: transparent;
-      color: $text-muted;
+      color: $accent-gold;
+      font-size: 1.3rem;
+      font-weight: bold;
       cursor: pointer;
-      font-weight: 600;
-      border-radius: 4px;
+      padding: 0;
       
-      &.active {
-        background-color: $accent-gold;
-        color: $primary-blue;
+      &:hover {
+        opacity: 0.9;
       }
-      
-      &:hover:not(.active) { background-color: $bg-light; }
     }
   }
 
-  .nav-right {
-    .profile-container {
-      position: relative;
+  .nav-tab {
+    background: none;
+    border: none;
+    color: $white;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
 
-      .profile-icon {
-        background: $primary-blue;
-        color: $white;
+    &:hover, &.active {
+      background-color: rgba($white, 0.1);
+    }
+  }
+
+  /* Contenedor del Dropdown de la izquierda */
+  .dropdown-container {
+    position: relative;
+    
+    .custom-dropdown {
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background-color: $white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: 6px;
+      padding: 0.5rem 0;
+      min-width: 200px;
+      z-index: 100;
+
+      .dropdown-item-menu {
+        width: 100%;
+        background: none;
         border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
+        text-align: left;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.95rem;
+        color: $text-dark;
         cursor: pointer;
+
+        &:hover {
+          background-color: rgba($accent-gold, 0.2);
+          color: $primary-blue;
+        }
       }
+    }
+  }
 
-      .profile-dropdown {
-        position: absolute;
-        top: 50px;
-        right: 0;
-        background: $white;
-        border: 1px solid #eee;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        display: flex;
-        flex-direction: column;
-        min-width: 150px;
-        overflow: hidden;
+  /* Menú de Perfil derecho */
+  .profile-container {
+    position: relative;
 
-        .dropdown-item {
-          padding: 12px 20px;
-          border: none;
-          background: transparent;
-          text-align: left;
-          cursor: pointer;
-          font-weight: 500;
-          
-          &:hover { background-color: $bg-light; }
-          
-          &.logout {
-            color: $danger-red;
-            border-top: 1px solid #eee;
-            &:hover { background-color: #ffebee; }
+    .profile-icon-btn {
+      background: rgba($white, 0.1);
+      border: none;
+      color: $white;
+      font-size: 1.2rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba($white, 0.2);
+      }
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      top: 120%;
+      right: 0; // Se alinea a la orilla derecha perfectamente
+      background-color: $white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: 6px;
+      padding: 0.5rem 0;
+      min-width: 160px;
+      z-index: 100;
+
+      .dropdown-item {
+        width: 100%;
+        background: none;
+        border: none;
+        text-align: left;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.95rem;
+        color: $text-dark;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+
+        &.logout {
+          color: $danger-red;
+          border-top: 1px solid #eee;
+          margin-top: 0.25rem;
+          padding-top: 0.5rem;
+
+          &:hover {
+            background-color: #fff5f5;
           }
         }
       }
+    }
+  }
+}
+
+/* Base de layout para los Dashboards */
+.dashboard-layout {
+  min-height: 100vh;
+  background-color: $bg-light;
+
+  .dashboard-content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .welcome-header {
+      margin-bottom: 2rem;
+      h1 { color: $primary-blue; margin-bottom: 0.5rem; }
+      p { color: $text-muted; }
+    }
+
+    .placeholder-card {
+      background-color: $white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-left: 4px solid $secondary-blue;
+      
+      h3 { color: $secondary-blue; margin-bottom: 0.5rem; }
+      p { color: $text-muted; }
     }
   }
 }

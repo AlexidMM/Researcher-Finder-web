@@ -77,7 +77,7 @@ export default function StudentDashboard() {
                   transition: 'background-color 0.3s'
                 }}
               >
-                {isSearching ? 'Buscando...' : '🌐 Buscar en la Web'}
+                {isSearching ? 'Buscando...' : 'Buscar en la Web'}
               </button>
             </form>
 

@@ -1,0 +1,258 @@
+$primary-blue: #0a2540;
+$secondary-blue: #173a5e;
+$accent-gold: #f6c844;
+$white: #ffffff;
+$text-muted: #6b7280;
+$border-soft: #e5e7eb;
+
+.blog-header {
+  border-bottom: 1px solid $border-soft;
+  padding-bottom: 1rem;
+}
+
+.blog-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 1.75rem;
+}
+
+.blog-filters-label {
+  color: $text-muted;
+  font-weight: 600;
+  margin-right: 0.3rem;
+}
+
+.blog-filter-btn {
+  border: 1px solid #cbd5e1;
+  background: $white;
+  color: $secondary-blue;
+  border-radius: 999px;
+  padding: 0.45rem 0.95rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $secondary-blue;
+  }
+
+  &.is-active {
+    background: $primary-blue;
+    color: $white;
+    border-color: $primary-blue;
+  }
+}
+
+.blog-feed {
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-card {
+  background: $white;
+  border: 1px solid $border-soft;
+  border-left: 4px solid #94a3b8;
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.blog-card.type-scholarship {
+  border-left-color: #3b82f6;
+}
+
+.blog-card.type-internship {
+  border-left-color: #10b981;
+}
+
+.blog-card.type-project {
+  border-left-color: #f59e0b;
+}
+
+.blog-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.blog-card-title {
+  margin: 0;
+  color: $primary-blue;
+  font-size: 1.32rem;
+}
+
+.blog-card-type {
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.blog-card-type.type-scholarship {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.blog-card-type.type-internship {
+  background: #ecfdf5;
+  color: #047857;
+  border-color: #a7f3d0;
+}
+
+.blog-card-type.type-project {
+  background: #fff7ed;
+  color: #b45309;
+  border-color: #fed7aa;
+}
+
+.blog-card-meta {
+  margin: 0.4rem 0 0;
+  color: #334155;
+}
+
+.meta-label {
+  color: $text-muted;
+  font-weight: 600;
+}
+
+.blog-card-description {
+  margin: 0.85rem 0 0;
+  color: #111827;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.blog-card-footer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid $border-soft;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.blog-card-date {
+  color: $text-muted;
+  font-size: 0.92rem;
+}
+
+.blog-details-btn {
+  border: 1px solid #d1d5db;
+  background: $white;
+  color: $primary-blue;
+  border-radius: 8px;
+  padding: 0.45rem 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $primary-blue;
+  }
+}
+
+.blog-state-box,
+.blog-error-box {
+  background: $white;
+  border: 1px solid $border-soft;
+  border-radius: 10px;
+  padding: 1.2rem;
+}
+
+.blog-error-box {
+  border-color: #fecaca;
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 70;
+}
+
+.modal-card {
+  width: min(940px, 92vw);
+  background: $white;
+  border-radius: 12px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.2);
+  border: 1px solid $border-soft;
+  padding: 1rem;
+}
+
+.blog-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+
+  h3 {
+    margin: 0;
+    color: $primary-blue;
+  }
+}
+
+.blog-modal-close {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.blog-modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.blog-modal-panel {
+  border: 1px solid $border-soft;
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: #fafafa;
+
+  h4 {
+    margin: 0 0 0.5rem;
+    color: $secondary-blue;
+  }
+
+  p {
+    margin: 0.35rem 0;
+    color: #1f2937;
+    line-height: 1.45;
+  }
+}
+
+.blog-modal-footer {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.blog-modal-btn-close {
+  background: $primary-blue;
+  color: $white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 0.95rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .blog-modal-grid {
+    grid-template-columns: 1fr;
+  }
+}

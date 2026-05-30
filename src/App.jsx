@@ -5,6 +5,8 @@ import StudentDashboard from './modules/student/StudentDashboard';
 import Blog from './modules/shared/Blog';
 import AdminDashboard from './modules/admin/AdminDashboard';
 import ResearcherDashboard from './modules/researcher/ResearcherDashboard';
+import CreatePublication from './modules/researcher/CreatePublication';
+import EditPublication from './modules/researcher/EditPublication';
 import './styles.scss'; // Tus estilos globales
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
 
         {/* Rutas Privadas de Investigadores */}
         <Route path="/researcher/dashboard" element={<ResearcherDashboard />} />
+        <Route path="/researcher/create-publication" element={<CreatePublication />} />
+        <Route path="/researcher/edit-publication/:id" element={<EditPublication />} />
 
         {/* Rutas Privadas de Administradores */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />

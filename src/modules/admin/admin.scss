@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $primary-blue: #0A2540;
 $secondary-blue: #173A5E;
 $accent-gold: #F6C844;
@@ -31,26 +33,285 @@ $text-muted: #666666;
     }
   }
 
-  .actions-section {
-    margin-bottom: 2.5rem;
+  // Tabs para gestores
+  .admin-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid $bg-light;
+    padding-bottom: 0;
 
-    .btn-create-post {
-      background-color: $primary-blue;
-      color: $white;
+    .admin-tab-btn {
+      background: none;
       border: none;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      color: $text-muted;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+      font-weight: 600;
+      position: relative;
+      bottom: -2px;
+
+      &:hover {
+        color: $primary-blue;
+      }
+
+      &.is-active {
+        color: $primary-blue;
+        border-bottom-color: $accent-gold;
+      }
+    }
+  }
+
+  // Contenedor de contenido admin
+  .admin-content {
+    background-color: $white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  // Manager común
+  .admin-manager {
+    .admin-loading {
+      text-align: center;
+      padding: 2rem;
+      color: $text-muted;
       font-size: 1.1rem;
+    }
+
+    .admin-error {
+      background-color: #fee;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #c33;
+    }
+
+    .admin-empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: $text-muted;
+      font-size: 1.1rem;
+    }
+
+    // Tabla
+    .admin-table-container {
+      overflow-x: auto;
+      margin-top: 1.5rem;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: $white;
+
+      thead {
+        background-color: $bg-light;
+        border-bottom: 2px solid $text-muted;
+
+        th {
+          padding: 1rem;
+          text-align: left;
+          font-weight: 700;
+          color: $text-dark;
+          font-size: 0.95rem;
+        }
+      }
+
+      tbody {
+        tr {
+          border-bottom: 1px solid $bg-light;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: $bg-light;
+          }
+
+          td {
+            padding: 1rem;
+            color: $text-dark;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+
+    // Formularios inline
+    .admin-form-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .admin-input {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid $text-muted;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-blue;
+        box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
+      }
+    }
+
+    .admin-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    // Disciplinas select
+    .admin-disciplines-select {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+
+      .admin-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+
+        input {
+          cursor: pointer;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+
+    // Disciplinas view
+    .admin-disciplines-view {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .admin-discipline-badge {
+      background-color: $bg-light;
+      color: $primary-blue;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid $primary-blue;
+    }
+
+    .admin-empty-text {
+      color: $text-muted;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    // Acciones (botones)
+    .admin-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .admin-btn-edit,
+    .admin-btn-delete,
+    .admin-btn-save,
+    .admin-btn-cancel,
+    .admin-btn-create {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba($primary-blue, 0.2);
+    }
+
+    .admin-btn-edit {
+      background-color: $accent-gold;
+      color: $primary-blue;
+
+      &:hover {
+        background-color: color.adjust($accent-gold, $lightness: -10%);
+      }
+    }
+
+    .admin-btn-delete {
+      background-color: #ee5a52;
+      color: $white;
+
+      &:hover {
+        background-color: color.adjust(#ee5a52, $lightness: -10%);
+      }
+    }
+
+    .admin-btn-save {
+      background-color: #4caf50;
+      color: $white;
+
+      &:hover {
+        background-color: color.adjust(#4caf50, $lightness: -10%);
+      }
+    }
+
+    .admin-btn-cancel {
+      background-color: $text-muted;
+      color: $white;
+
+      &:hover {
+        background-color: color.adjust($text-muted, $lightness: -10%);
+      }
+    }
+
+    .admin-btn-create {
+      background-color: $primary-blue;
+      color: $white;
+      padding: 0.75rem 1.5rem;
 
       &:hover {
         background-color: $accent-gold;
         color: $primary-blue;
-        box-shadow: 0 4px 15px rgba($accent-gold, 0.4);
       }
+    }
+
+    // Formulario container
+    .admin-form-container {
+      background-color: $bg-light;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border-left: 4px solid $primary-blue;
+
+      h3 {
+        color: $primary-blue;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+      }
+    }
+
+    .admin-form-group {
+      margin-bottom: 1rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: $text-dark;
+      }
+    }
+
+    .admin-form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .admin-create-section {
+      margin-bottom: 2rem;
     }
   }
 

@@ -34,11 +34,7 @@ export default function Blog() {
     }
   };
 
-  // Filtrar publicaciones por tipo
-  const filteredPublications =
-    selectedType === 'all'
-      ? publications
-      : publications.filter((pub) => pub.type === selectedType);
+  // (filteredPublications se calcula más abajo combinando tipo y disciplina)
 
   const typeLabels = {
     scholarship: 'Beca de Investigación',
@@ -46,8 +42,35 @@ export default function Blog() {
     project: 'Proyecto de Colaboración',
   };
 
+  const [selectedDiscipline, setSelectedDiscipline] = useState('all');
+  const [disciplines, setDisciplines] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
+
+  useEffect(() => {
+    fetchDisciplines();
+  }, []);
+
+  const fetchDisciplines = async () => {
+    try {
+      const data = await apiFetch('/disciplines');
+      setDisciplines(data || []);
+    } catch (err) {
+      console.error('Error al cargar disciplinas:', err);
+    }
+  };
+
+  const filteredPublications = publications.filter((pub) => {
+    const typeMatch = selectedType === 'all' || pub.type === selectedType;
+    let disciplineMatch = true;
+    
+    if (selectedDiscipline !== 'all') {
+      const disciplineIds = pub.author?.researcher?.disciplines?.map((d) => d.id) || [];
+      disciplineMatch = disciplineIds.includes(+selectedDiscipline);
+    }
+
+    return typeMatch && disciplineMatch;
+  });
 
   const getTypeClass = (type) => `type-${type || 'default'}`;
 
@@ -134,6 +157,27 @@ export default function Blog() {
           </button>
         </section>
 
+        <section className="blog-filters">
+          <span className="blog-filters-label">Filtrar por disciplina:</span>
+
+          <button
+            className={`blog-filter-btn ${selectedDiscipline === 'all' ? 'is-active' : ''}`}
+            onClick={() => setSelectedDiscipline('all')}
+          >
+            Todas
+          </button>
+
+          {disciplines.map((discipline) => (
+            <button
+              key={discipline.id}
+              className={`blog-filter-btn ${selectedDiscipline === String(discipline.id) ? 'is-active' : ''}`}
+              onClick={() => setSelectedDiscipline(String(discipline.id))}
+            >
+              {discipline.name}
+            </button>
+          ))}
+        </section>
+
         {loading && (
           <div className="blog-state-box">Cargando publicaciones...</div>
         )}
@@ -159,6 +203,19 @@ export default function Blog() {
                 <p className="blog-card-meta">
                   <span className="meta-label">Institucion:</span> {getInstitutionName(publication)}
                 </p>
+
+                <div className="blog-card-disciplines">
+                  {publication.author?.researcher?.disciplines && publication.author.researcher.disciplines.length > 0 ? (
+                    <>
+                      <span className="meta-label">Disciplinas:</span>
+                      <div className="blog-disciplines-list">
+                        {publication.author.researcher.disciplines.map((d) => (
+                          <span key={d.id} className="blog-discipline-tag">{d.name}</span>
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
+                </div>
 
                 <p className="blog-card-description">{publication.description}</p>
 
@@ -203,6 +260,19 @@ export default function Blog() {
                 <p><strong>Institucion:</strong> {getInstitutionName(modalData)}</p>
                 <p><strong>Acronimo:</strong> {modalData.author?.researcher?.affiliation?.acronym || 'No disponible'}</p>
                 <p><strong>Contacto:</strong> {modalData.author?.researcher?.affiliation?.contactInfo || 'No disponible'}</p>
+                
+                {modalData.author?.researcher?.disciplines && modalData.author.researcher.disciplines.length > 0 && (
+                  <div className="blog-modal-disciplines">
+                    <p><strong>Disciplinas:</strong></p>
+                    <div className="blog-modal-disciplines-list">
+                      {modalData.author.researcher.disciplines.map((d) => (
+                        <span key={d.id} className="blog-modal-discipline-badge">
+                          {d.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </section>
             </div>
 

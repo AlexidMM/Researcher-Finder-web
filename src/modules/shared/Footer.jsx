@@ -53,6 +53,11 @@ export default function Footer() {
           <h4>Contacto</h4>
           <p>Proyecto académico UTEQ</p>
           <p>Disponible para navegación interna y gestión de oportunidades</p>
+          <nav className="footer-links" aria-label="Información del sitio">
+            <Link to="/about" className="footer-link">Acerca de</Link>
+            <Link to="/testimonials" className="footer-link">Testimonios</Link>
+            <Link to="/cookies" className="footer-link">Aviso de cookies</Link>
+          </nav>
         </div>
       </div>
 

@@ -5,6 +5,9 @@ import StudentDashboard from './modules/student/StudentDashboard';
 import Explore from './modules/student/Explore';
 import Blog from './modules/shared/Blog';
 import Profile from './modules/shared/Profile';
+import About from './modules/shared/About';
+import Testimonials from './modules/shared/Testimonials';
+import CookiesNotice from './modules/shared/CookiesNotice';
 import AdminDashboard from './modules/admin/AdminDashboard';
 import ResearcherDashboard from './modules/researcher/ResearcherDashboard';
 import CreatePublication from './modules/researcher/CreatePublication';
@@ -26,6 +29,9 @@ function App() {
           {/* Nueva ruta para el Blog */}
         <Route path="/blog" element={<Blog />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/testimonials" element={<Testimonials />} />
+        <Route path="/cookies" element={<CookiesNotice />} />
 
         {/* Rutas Privadas de Investigadores */}
         <Route path="/researcher/dashboard" element={<ResearcherDashboard />} />

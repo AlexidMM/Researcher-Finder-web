@@ -65,12 +65,13 @@ export default function Profile() {
           affiliationId: String(currentAffiliationId),
           affiliationName: currentResearcher?.affiliation?.name || institutionList.find((inst) => String(inst.id) === String(currentAffiliationId))?.name || '',
         });
+        // Prefill formData so inputs show current values and are editable
         setFormData({
-          firstName: '',
-          lastNameP: '',
-          lastNameM: '',
-          institutionId: '',
-          affiliationId: '',
+          firstName: currentResearcher?.firstName || '',
+          lastNameP: currentResearcher?.lastNameP || '',
+          lastNameM: currentResearcher?.lastNameM || '',
+          institutionId: currentResearcher?.institutionId ? String(currentResearcher.institutionId) : '',
+          affiliationId: String(currentAffiliationId) || '',
           disciplines: currentResearcher?.disciplines?.map((discipline) => discipline.id) || [],
         });
       } else if (user.role === 'student') {
@@ -97,11 +98,12 @@ export default function Profile() {
           affiliationId: '',
           affiliationName: '',
         });
+        // Prefill form with student values so the inputs are editable and show current data
         setFormData({
-          firstName: '',
-          lastNameP: '',
-          lastNameM: '',
-          institutionId: '',
+          firstName: currentStudent?.firstName || '',
+          lastNameP: currentStudent?.lastNameP || '',
+          lastNameM: currentStudent?.lastNameM || '',
+          institutionId: String(currentInstitutionId) || '',
           affiliationId: '',
           disciplines: [],
         });
@@ -137,26 +139,28 @@ export default function Profile() {
     try {
       if (user.role === 'student') {
         const studentId = profileData.studentId || user.student?.id;
-        await apiFetch(`/students/${studentId}`, {
-          method: 'PATCH',
-          body: JSON.stringify({
-            firstName: formData.firstName || profileData.firstName,
-            lastNameP: formData.lastNameP || profileData.lastNameP,
-            lastNameM: formData.lastNameM || profileData.lastNameM,
-            institutionId: (formData.institutionId || profileData.institutionId) ? +(formData.institutionId || profileData.institutionId) : undefined,
-          }),
-        });
+        const payload = {};
+        if (formData.firstName !== profileData.firstName) payload.firstName = formData.firstName;
+        if (formData.lastNameP !== profileData.lastNameP) payload.lastNameP = formData.lastNameP;
+        if (formData.lastNameM !== profileData.lastNameM) payload.lastNameM = formData.lastNameM;
+        if (String(formData.institutionId) !== String(profileData.institutionId)) payload.institutionId = formData.institutionId ? +formData.institutionId : null;
+
+        if (Object.keys(payload).length > 0) {
+          await apiFetch(`/students/${studentId}`, { method: 'PATCH', body: JSON.stringify(payload) });
+        } else {
+          setMessage({ type: 'info', text: 'No se detectaron cambios.' });
+        }
       } else if (user.role === 'researcher') {
         const researcherId = profileData.researcherId || user.researcher?.id;
-        await apiFetch(`/researchers/${researcherId}`, {
-          method: 'PATCH',
-          body: JSON.stringify({
-            firstName: formData.firstName || profileData.firstName,
-            lastNameP: formData.lastNameP || profileData.lastNameP,
-            lastNameM: formData.lastNameM || profileData.lastNameM,
-            affiliationId: (formData.affiliationId || profileData.affiliationId) ? +(formData.affiliationId || profileData.affiliationId) : undefined,
-          }),
-        });
+        const payload = {};
+        if (formData.firstName !== profileData.firstName) payload.firstName = formData.firstName;
+        if (formData.lastNameP !== profileData.lastNameP) payload.lastNameP = formData.lastNameP;
+        if (formData.lastNameM !== profileData.lastNameM) payload.lastNameM = formData.lastNameM;
+        if (String(formData.affiliationId) !== String(profileData.affiliationId)) payload.affiliationId = formData.affiliationId ? +formData.affiliationId : null;
+
+        if (Object.keys(payload).length > 0) {
+          await apiFetch(`/researchers/${researcherId}`, { method: 'PATCH', body: JSON.stringify(payload) });
+        }
 
         const currentData = await apiFetch(`/researchers/${researcherId}`);
         const currentDisciplines = currentData.disciplines?.map((discipline) => discipline.id) || [];
@@ -178,17 +182,17 @@ export default function Profile() {
       if (user.role === 'student') {
         updatedUser.student = {
           ...updatedUser.student,
-          firstName: formData.firstName || profileData.firstName,
-          lastNameP: formData.lastNameP || profileData.lastNameP,
-          lastNameM: formData.lastNameM || profileData.lastNameM,
+          firstName: formData.firstName,
+          lastNameP: formData.lastNameP,
+          lastNameM: formData.lastNameM,
         };
       }
       if (user.role === 'researcher') {
         updatedUser.researcher = {
           ...updatedUser.researcher,
-          firstName: formData.firstName || profileData.firstName,
-          lastNameP: formData.lastNameP || profileData.lastNameP,
-          lastNameM: formData.lastNameM || profileData.lastNameM,
+          firstName: formData.firstName,
+          lastNameP: formData.lastNameP,
+          lastNameM: formData.lastNameM,
         };
       }
 
@@ -276,7 +280,7 @@ export default function Profile() {
                   <label>Institución Educativa</label>
                   <select
                     name="institutionId"
-                    value={formData.institutionId || profileData.institutionId}
+                    value={formData.institutionId}
                     onChange={handleChange}
                     required
                   >
@@ -298,7 +302,7 @@ export default function Profile() {
                   <label>Afiliación (Institución)</label>
                   <select
                     name="affiliationId"
-                    value={formData.affiliationId || profileData.affiliationId}
+                    value={formData.affiliationId}
                     onChange={handleChange}
                   >
                     <option value="">Investigador Independiente (Ninguna)</option>

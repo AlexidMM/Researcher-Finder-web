@@ -13,6 +13,79 @@ $text-muted: #666666;
   background-color: $bg-light;
 }
 
+.admin-dashboard-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.admin-main-content {
+  min-width: 0;
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-sidebar-block {
+  background: $white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+  h3 {
+    margin: 0 0 0.75rem 0;
+    color: $primary-blue;
+    font-size: 1rem;
+  }
+}
+
+.admin-sidebar-ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.admin-sidebar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid $secondary-blue;
+  color: $secondary-blue;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0.55rem 0.8rem;
+
+  &.is-primary {
+    background: $primary-blue;
+    border-color: $primary-blue;
+    color: $white;
+  }
+}
+
+.admin-sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+
+  a {
+    color: $secondary-blue;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      color: $primary-blue;
+      text-decoration: underline;
+    }
+  }
+}
+
 .dashboard-content {
   padding: 2.5rem;
   max-width: 1200px;
@@ -340,6 +413,14 @@ $text-muted: #666666;
 @media (max-width: 768px) {
   .dashboard-content {
     padding: 1.5rem;
+  }
+
+  .admin-dashboard-main {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    position: static;
   }
 }
 

@@ -1,0 +1,42 @@
+$primary-blue: #0A2540;
+$secondary-blue: #173A5E;
+$white: #FFFFFF;
+$text-muted: #616b75;
+
+.info-page-wrap {
+  max-width: 1024px;
+}
+
+.info-page-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.info-page-card {
+  background: $white;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 4px 16px rgba(10, 37, 64, 0.08);
+
+  h2 {
+    margin: 0 0 0.5rem;
+    color: $primary-blue;
+  }
+
+  p {
+    margin: 0 0 0.6rem;
+    color: $text-muted;
+    line-height: 1.55;
+  }
+}
+
+.testimonial-quote {
+  color: $secondary-blue;
+  font-weight: 600;
+}
+
+.testimonial-author {
+  color: $primary-blue;
+  font-weight: 700;
+}

@@ -1,0 +1,12 @@
+$bg-light: #f4f5f7;
+$primary-blue: #0a2540;
+
+.tag-list { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.tag-item {
+  background: $bg-light;
+  color: $primary-blue;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}

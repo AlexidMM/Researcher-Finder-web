@@ -3,14 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isDisciplinesOpen, setIsDisciplinesOpen] = useState(false);
   const navigate = useNavigate();
 
   // Leer sesión real
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const role = user?.role; // 'student' o 'researcher'
-
-  const disciplinesList = ['STEM', 'Biología', 'Ciencias de la Salud', 'Humanidades'];
+  const role = user?.role; // 'student', 'researcher' o 'admin'
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
@@ -22,6 +19,7 @@ export default function Navbar() {
   const handleLogoClick = () => {
     if (role === 'student') navigate('/student/dashboard');
     else if (role === 'researcher') navigate('/researcher/dashboard');
+    else if (role === 'admin') navigate('/admin/dashboard');
     else navigate('/');
   };
 
@@ -33,37 +31,26 @@ export default function Navbar() {
           Researcher Finder
         </button>
         
-        <button className="nav-tab" onClick={() => navigate('/blog')}>Blog</button>
-        {/* Pestaña de Disciplinas exclusiva para Estudiantes */}
+        <button className="nav-tab" onClick={() => navigate('/blog')}>
+          Blog
+        </button>
+        
+        {/* Pestaña de Explorar exclusiva para Estudiantes */}
         {role === 'student' && (
-          <div className="dropdown-container">
-            <button 
-              className={`nav-tab dropdown-toggle ${isDisciplinesOpen ? 'active' : ''}`}
-              onClick={() => setIsDisciplinesOpen(!isDisciplinesOpen)}
-            >
-              Disciplinas ▾
-            </button>
-            
-            {isDisciplinesOpen && (
-              <div className="custom-dropdown">
-                {disciplinesList.map((discipline, index) => (
-                  <button key={index} className="dropdown-item-menu">
-                    {discipline}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <button className="nav-tab" onClick={() => navigate('/explore')}>
+            Explorar
+          </button>
         )}
       </div>
 
       <div className="nav-right">
         <div className="profile-container">
+          {/* Usamos nav-tab para que sea texto puro y herede el diseño correcto */}
           <button 
-            className="profile-icon-btn" 
+            className="nav-tab" 
             onClick={() => setIsProfileOpen(!isProfileOpen)}
           >
-            👤
+            Perfil ▾
           </button>
           
           {isProfileOpen && (
@@ -71,14 +58,6 @@ export default function Navbar() {
               <button className="dropdown-item" onClick={() => navigate('/profile')}>
                 Perfil
               </button>
-              
-              {/* Opción exclusiva para Investigadores */}
-              {role === 'researcher' && (
-                <button className="dropdown-item" onClick={() => navigate('/researcher/posts')}>
-                  Posts
-                </button>
-              )}
-              
               <button className="dropdown-item logout" onClick={handleLogout}>
                 Log out
               </button>

@@ -10,6 +10,12 @@ export default function ResearchersManager() {
   const [error, setError] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  
+  // --- Estados para Filtros ---
+  const [searchTerm, setSearchTerm] = useState('');
+  const [institutionFilter, setInstitutionFilter] = useState('');
+  const [disciplineFilter, setDisciplineFilter] = useState('');
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastNameP: '',
@@ -172,25 +178,21 @@ export default function ResearchersManager() {
 
   const handleSave = async () => {
     try {
-      // Actualizar investigador
       const currentResearcher = researchers.find((r) => r.id === editingId);
       const currentDisciplines = currentResearcher?.disciplines?.map((d) => d.id) || [];
 
-      // Agregar nuevas disciplinas
       for (const disciplineId of selectedDisciplines) {
         if (!currentDisciplines.includes(disciplineId)) {
           await apiFetch(`/researchers/${editingId}/disciplines/${disciplineId}`, { method: 'POST' });
         }
       }
 
-      // Remover disciplinas eliminadas
       for (const disciplineId of currentDisciplines) {
         if (!selectedDisciplines.includes(disciplineId)) {
           await apiFetch(`/researchers/${editingId}/disciplines/${disciplineId}`, { method: 'DELETE' });
         }
       }
 
-      // Actualizar datos del perfil si cambió affiliation
       if (formData.affiliation !== currentResearcher.affiliation?.id) {
         const userData = {
           firstName: formData.firstName,
@@ -227,11 +229,65 @@ export default function ResearchersManager() {
     }
   };
 
+  // --- Lógica de Filtrado en Tiempo Real ---
+  const filteredResearchers = researchers.filter((res) => {
+    const fullName = `${res.firstName || ''} ${res.lastNameP || ''} ${res.lastNameM || ''}`.toLowerCase();
+    const email = (res.user?.email || '').toLowerCase();
+    
+    // Filtro por nombre o correo
+    const matchesSearch = fullName.includes(searchTerm.toLowerCase()) || email.includes(searchTerm.toLowerCase());
+    
+    // Filtro por institución
+    const matchesInst = institutionFilter === '' || (res.affiliation && res.affiliation.id.toString() === institutionFilter);
+    
+    // Filtro por disciplina
+    const matchesDisc = disciplineFilter === '' || (res.disciplines && res.disciplines.some(d => d.id.toString() === disciplineFilter));
+    
+    return matchesSearch && matchesInst && matchesDisc;
+  });
+
   if (loading) return <div className="admin-loading">Cargando investigadores...</div>;
 
   return (
     <div className="admin-manager">
       {error && <div className="admin-error">{error}</div>}
+
+      {/* --- BARRA DE FILTROS --- */}
+      <div className="admin-filters-bar">
+        <input 
+          type="text" 
+          placeholder="Buscar por nombre o correo..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="admin-filter-input"
+        />
+        
+        <select 
+          value={institutionFilter} 
+          onChange={(e) => setInstitutionFilter(e.target.value)}
+          className="admin-filter-select"
+        >
+          <option value="">Todas las instituciones</option>
+          {institutions.map(inst => (
+            <option key={inst.id} value={inst.id}>
+              {inst.acronym || inst.name}
+            </option>
+          ))}
+        </select>
+
+        <select 
+          value={disciplineFilter} 
+          onChange={(e) => setDisciplineFilter(e.target.value)}
+          className="admin-filter-select"
+        >
+          <option value="">Todas las disciplinas</option>
+          {disciplines.map(disc => (
+            <option key={disc.id} value={disc.id}>
+              {disc.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {!isCreating && editingId === null && (
         <div className="admin-create-section">
@@ -340,130 +396,130 @@ export default function ResearchersManager() {
           <thead>
             <tr>
               <th>Nombre</th>
+              <th>Correo (Usuario)</th>
               <th>Institución</th>
               <th>Disciplinas</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {researchers.map((researcher) => (
-              <tr key={researcher.id}>
-                <td>
-                  {editingId === researcher.id ? (
-                    <div className="admin-form-row">
-                      <input
-                        type="text"
-                        name="firstName"
-                        placeholder="Nombre"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
+            {filteredResearchers.length === 0 ? (
+              <tr><td colSpan="5" className="admin-empty-text">No se encontraron investigadores.</td></tr>
+            ) : (
+              filteredResearchers.map((researcher) => (
+                <tr key={researcher.id}>
+                  <td>
+                    {editingId === researcher.id ? (
+                      <div className="admin-form-row">
+                        <input
+                          type="text"
+                          name="firstName"
+                          placeholder="Nombre"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
+                          className="admin-input"
+                        />
+                        <input
+                          type="text"
+                          name="lastNameP"
+                          placeholder="Apellido P."
+                          value={formData.lastNameP}
+                          onChange={handleInputChange}
+                          className="admin-input"
+                        />
+                        <input
+                          type="text"
+                          name="lastNameM"
+                          placeholder="Apellido M."
+                          value={formData.lastNameM}
+                          onChange={handleInputChange}
+                          className="admin-input"
+                        />
+                      </div>
+                    ) : (
+                      `${researcher.firstName || ''} ${researcher.lastNameP || ''} ${researcher.lastNameM || ''}`
+                    )}
+                  </td>
+                  <td>{researcher.user?.email || 'Sin cuenta'}</td>
+                  <td>
+                    {editingId === researcher.id ? (
+                      <select
+                        value={formData.affiliation || ''}
+                        onChange={handleAffiliationChange}
                         className="admin-input"
-                      />
-                      <input
-                        type="text"
-                        name="lastNameP"
-                        placeholder="Apellido P."
-                        value={formData.lastNameP}
-                        onChange={handleInputChange}
-                        className="admin-input"
-                      />
-                      <input
-                        type="text"
-                        name="lastNameM"
-                        placeholder="Apellido M."
-                        value={formData.lastNameM}
-                        onChange={handleInputChange}
-                        className="admin-input"
-                      />
-                    </div>
-                  ) : (
-                    `${researcher.firstName || ''} ${researcher.lastNameP || ''} ${researcher.lastNameM || ''}`
-                  )}
-                </td>
-                <td>
-                  {editingId === researcher.id ? (
-                    <select
-                      value={formData.affiliation || ''}
-                      onChange={handleAffiliationChange}
-                      className="admin-input"
-                    >
-                      <option value="">Ninguna</option>
-                      {institutions.map((inst) => (
-                        <option key={inst.id} value={inst.id}>
-                          {inst.name}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    researcher.affiliation?.name || 'Sin institución'
-                  )}
-                </td>
-                <td>
-                  {editingId === researcher.id ? (
-                    <div className="admin-disciplines-select">
-                      {disciplines.map((disc) => (
-                        <label key={disc.id} className="admin-checkbox">
-                          <input
-                            type="checkbox"
-                            checked={selectedDisciplines.includes(disc.id)}
-                            onChange={() => toggleDiscipline(disc.id)}
-                          />
-                          {disc.name}
-                        </label>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="admin-disciplines-view">
-                      {researcher.disciplines && researcher.disciplines.length > 0 ? (
-                        researcher.disciplines.map((d) => (
-                          <span key={d.id} className="admin-discipline-badge">
-                            {d.name}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="admin-empty-text">Sin disciplinas</span>
-                      )}
-                    </div>
-                  )}
-                </td>
-                <td>
-                  {editingId === researcher.id ? (
-                    <div className="admin-actions">
-                      <button className="admin-btn-save" onClick={handleSave}>
-                        Guardar
-                      </button>
-                      <button className="admin-btn-cancel" onClick={handleCancel}>
-                        Cancelar
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="admin-actions">
-                      <button
-                        className="admin-btn-edit"
-                        onClick={() => handleEdit(researcher)}
                       >
-                        Editar
-                      </button>
-                      <button
-                        className="admin-btn-delete"
-                        onClick={() => handleDelete(researcher.id)}
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
+                        <option value="">Ninguna</option>
+                        {institutions.map((inst) => (
+                          <option key={inst.id} value={inst.id}>
+                            {inst.name}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      researcher.affiliation?.name || <span className="admin-empty-text">Sin institución</span>
+                    )}
+                  </td>
+                  <td>
+                    {editingId === researcher.id ? (
+                      <div className="admin-disciplines-select">
+                        {disciplines.map((disc) => (
+                          <label key={disc.id} className="admin-checkbox">
+                            <input
+                              type="checkbox"
+                              checked={selectedDisciplines.includes(disc.id)}
+                              onChange={() => toggleDiscipline(disc.id)}
+                            />
+                            {disc.name}
+                          </label>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="admin-disciplines-view">
+                        {researcher.disciplines && researcher.disciplines.length > 0 ? (
+                          researcher.disciplines.map((d) => (
+                            <span key={d.id} className="admin-discipline-badge">
+                              {d.name}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="admin-empty-text">Sin disciplinas</span>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    {editingId === researcher.id ? (
+                      <div className="admin-actions">
+                        <button className="admin-btn-save" onClick={handleSave}>
+                          Guardar
+                        </button>
+                        <button className="admin-btn-cancel" onClick={handleCancel}>
+                          Cancelar
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="admin-actions">
+                        <button
+                          className="admin-btn-edit"
+                          onClick={() => handleEdit(researcher)}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="admin-btn-delete"
+                          onClick={() => handleDelete(researcher.id)}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
-
-      {researchers.length === 0 && (
-        <div className="admin-empty-state">
-          <p>No hay investigadores registrados.</p>
-        </div>
-      )}
     </div>
   );
 }

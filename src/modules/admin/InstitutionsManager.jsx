@@ -9,10 +9,16 @@ export default function InstitutionsManager() {
   const [error, setError] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  
+  // Filtros
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+
   const [formData, setFormData] = useState({
     name: '',
     acronym: '',
     contactInfo: '',
+    type: ''
   });
   const [createData, setCreateData] = useState({
     name: '',
@@ -50,13 +56,14 @@ export default function InstitutionsManager() {
       name: institution.name || '',
       acronym: institution.acronym || '',
       contactInfo: institution.contactInfo || '',
+      type: institution.type || '' 
     });
     setSelectedDisciplines(institution.disciplines?.map((d) => d.id) || []);
   };
 
   const handleCancel = () => {
     setEditingId(null);
-    setFormData({ name: '', acronym: '', contactInfo: '' });
+    setFormData({ name: '', acronym: '', contactInfo: '', type: '' });
     setSelectedDisciplines([]);
   };
 
@@ -75,33 +82,23 @@ export default function InstitutionsManager() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCreateInputChange = (e) => {
     const { name, value } = e.target;
-    setCreateData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setCreateData((prev) => ({ ...prev, [name]: value }));
   };
 
   const toggleDiscipline = (disciplineId) => {
     setSelectedDisciplines((prev) =>
-      prev.includes(disciplineId)
-        ? prev.filter((id) => id !== disciplineId)
-        : [...prev, disciplineId]
+      prev.includes(disciplineId) ? prev.filter((id) => id !== disciplineId) : [...prev, disciplineId]
     );
   };
 
   const toggleCreateDiscipline = (disciplineId) => {
     setCreateDisciplines((prev) =>
-      prev.includes(disciplineId)
-        ? prev.filter((id) => id !== disciplineId)
-        : [...prev, disciplineId]
+      prev.includes(disciplineId) ? prev.filter((id) => id !== disciplineId) : [...prev, disciplineId]
     );
   };
 
@@ -125,9 +122,7 @@ export default function InstitutionsManager() {
       const newInstitutionId = created?.id;
       if (newInstitutionId && createDisciplines.length > 0) {
         for (const disciplineId of createDisciplines) {
-          await apiFetch(`/institutions/${newInstitutionId}/disciplines/${disciplineId}`, {
-            method: 'POST',
-          });
+          await apiFetch(`/institutions/${newInstitutionId}/disciplines/${disciplineId}`, { method: 'POST' });
         }
       }
 
@@ -145,27 +140,25 @@ export default function InstitutionsManager() {
       const currentInstitution = institutions.find((i) => i.id === editingId);
       const currentDisciplines = currentInstitution?.disciplines?.map((d) => d.id) || [];
 
-      // Agregar nuevas disciplinas
       for (const disciplineId of selectedDisciplines) {
         if (!currentDisciplines.includes(disciplineId)) {
           await apiFetch(`/institutions/${editingId}/disciplines/${disciplineId}`, { method: 'POST' });
         }
       }
 
-      // Remover disciplinas eliminadas
       for (const disciplineId of currentDisciplines) {
         if (!selectedDisciplines.includes(disciplineId)) {
           await apiFetch(`/institutions/${editingId}/disciplines/${disciplineId}`, { method: 'DELETE' });
         }
       }
 
-      // Actualizar datos de la institución
       await apiFetch(`/institutions/${editingId}`, {
         method: 'PATCH',
         body: JSON.stringify({
           name: formData.name,
           acronym: formData.acronym,
           contactInfo: formData.contactInfo,
+          type: formData.type // ¡Guardamos el tipo editado!
         }),
       });
 
@@ -188,11 +181,42 @@ export default function InstitutionsManager() {
     }
   };
 
+  // Lógica de Filtrado
+  const filteredInstitutions = institutions.filter((inst) => {
+    const matchesSearch = 
+      (inst.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+      (inst.acronym || '').toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = typeFilter === '' || inst.type === typeFilter;
+    return matchesSearch && matchesType;
+  });
+
   if (loading) return <div className="admin-loading">Cargando instituciones...</div>;
 
   return (
     <div className="admin-manager">
       {error && <div className="admin-error">{error}</div>}
+
+      {/* --- BARRA DE FILTROS --- */}
+      <div className="admin-filters-bar">
+        <input 
+          type="text" 
+          placeholder="Buscar por nombre o acrónimo..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="admin-filter-input"
+        />
+        <select 
+          value={typeFilter} 
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="admin-filter-select"
+        >
+          <option value="">Todos los tipos</option>
+          <option value="Universidad Pública">Universidad Pública</option>
+          <option value="Universidad Privada">Universidad Privada</option>
+          <option value="Centro de Investigación">Centro de Investigación</option>
+          <option value="Empresa">Empresa</option>
+        </select>
+      </div>
 
       {!isCreating && editingId === null && (
         <div className="admin-create-section">
@@ -205,44 +229,21 @@ export default function InstitutionsManager() {
       {isCreating && (
         <div className="admin-form-container">
           <h3>Nueva Institución</h3>
-
           <div className="admin-form-row">
-            <input
-              type="text"
-              name="name"
-              placeholder="Nombre"
-              value={createData.name}
-              onChange={handleCreateInputChange}
-              className="admin-input"
-            />
-            <input
-              type="text"
-              name="acronym"
-              placeholder="Acrónimo"
-              value={createData.acronym}
-              onChange={handleCreateInputChange}
-              className="admin-input"
-            />
-            <input
-              type="text"
-              name="type"
-              placeholder="Tipo"
-              value={createData.type}
-              onChange={handleCreateInputChange}
-              className="admin-input"
-            />
+            <input type="text" name="name" placeholder="Nombre" value={createData.name} onChange={handleCreateInputChange} className="admin-input" />
+            <input type="text" name="acronym" placeholder="Acrónimo" value={createData.acronym} onChange={handleCreateInputChange} className="admin-input" />
+            <select name="type" value={createData.type} onChange={handleCreateInputChange} className="admin-input">
+              <option value="">Selecciona el tipo...</option>
+              <option value="Universidad Pública">Universidad Pública</option>
+              <option value="Universidad Privada">Universidad Privada</option>
+              <option value="Centro de Investigación">Centro de Investigación</option>
+              <option value="Empresa">Empresa</option>
+            </select>
           </div>
 
           <div className="admin-form-group">
             <label>Contacto</label>
-            <input
-              type="text"
-              name="contactInfo"
-              placeholder="Correo/teléfono/contacto"
-              value={createData.contactInfo}
-              onChange={handleCreateInputChange}
-              className="admin-input"
-            />
+            <input type="text" name="contactInfo" placeholder="Correo/teléfono/contacto" value={createData.contactInfo} onChange={handleCreateInputChange} className="admin-input" />
           </div>
 
           <div className="admin-form-group">
@@ -250,11 +251,7 @@ export default function InstitutionsManager() {
             <div className="admin-disciplines-select">
               {disciplines.map((disc) => (
                 <label key={disc.id} className="admin-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={createDisciplines.includes(disc.id)}
-                    onChange={() => toggleCreateDiscipline(disc.id)}
-                  />
+                  <input type="checkbox" checked={createDisciplines.includes(disc.id)} onChange={() => toggleCreateDiscipline(disc.id)} />
                   {disc.name}
                 </label>
               ))}
@@ -262,12 +259,8 @@ export default function InstitutionsManager() {
           </div>
 
           <div className="admin-form-actions">
-            <button className="admin-btn-save" onClick={handleCreateSave}>
-              Crear
-            </button>
-            <button className="admin-btn-cancel" onClick={handleCreateCancel}>
-              Cancelar
-            </button>
+            <button className="admin-btn-save" onClick={handleCreateSave}>Crear</button>
+            <button className="admin-btn-cancel" onClick={handleCreateCancel}>Cancelar</button>
           </div>
         </div>
       )}
@@ -278,122 +271,85 @@ export default function InstitutionsManager() {
             <tr>
               <th>Nombre</th>
               <th>Acrónimo</th>
+              <th>Tipo</th>
               <th>Contacto</th>
               <th>Disciplinas</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {institutions.map((institution) => (
-              <tr key={institution.id}>
-                <td>
-                  {editingId === institution.id ? (
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Nombre"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="admin-input"
-                    />
-                  ) : (
-                    institution.name
-                  )}
-                </td>
-                <td>
-                  {editingId === institution.id ? (
-                    <input
-                      type="text"
-                      name="acronym"
-                      placeholder="Acrónimo"
-                      value={formData.acronym}
-                      onChange={handleInputChange}
-                      className="admin-input"
-                    />
-                  ) : (
-                    institution.acronym || '-'
-                  )}
-                </td>
-                <td>
-                  {editingId === institution.id ? (
-                    <input
-                      type="text"
-                      name="contactInfo"
-                      placeholder="Contacto"
-                      value={formData.contactInfo}
-                      onChange={handleInputChange}
-                      className="admin-input"
-                    />
-                  ) : (
-                    institution.contactInfo || '-'
-                  )}
-                </td>
-                <td>
-                  {editingId === institution.id ? (
-                    <div className="admin-disciplines-select">
-                      {disciplines.map((disc) => (
-                        <label key={disc.id} className="admin-checkbox">
-                          <input
-                            type="checkbox"
-                            checked={selectedDisciplines.includes(disc.id)}
-                            onChange={() => toggleDiscipline(disc.id)}
-                          />
-                          {disc.name}
-                        </label>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="admin-disciplines-view">
-                      {institution.disciplines && institution.disciplines.length > 0 ? (
-                        institution.disciplines.map((d) => (
-                          <span key={d.id} className="admin-discipline-badge">
-                            {d.name}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="admin-empty-text">Sin disciplinas</span>
-                      )}
-                    </div>
-                  )}
-                </td>
-                <td>
-                  {editingId === institution.id ? (
-                    <div className="admin-actions">
-                      <button className="admin-btn-save" onClick={handleSave}>
-                        Guardar
-                      </button>
-                      <button className="admin-btn-cancel" onClick={handleCancel}>
-                        Cancelar
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="admin-actions">
-                      <button
-                        className="admin-btn-edit"
-                        onClick={() => handleEdit(institution)}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="admin-btn-delete"
-                        onClick={() => handleDelete(institution.id)}
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {filteredInstitutions.length === 0 ? (
+              <tr><td colSpan="6" className="admin-empty-text">No se encontraron instituciones.</td></tr>
+            ) : (
+              filteredInstitutions.map((institution) => (
+                <tr key={institution.id}>
+                  <td>
+                    {editingId === institution.id ? (
+                      <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="admin-input" />
+                    ) : (institution.name)}
+                  </td>
+                  <td>
+                    {editingId === institution.id ? (
+                      <input type="text" name="acronym" value={formData.acronym} onChange={handleInputChange} className="admin-input" />
+                    ) : (institution.acronym || '-')}
+                  </td>
+                  <td>
+                    {editingId === institution.id ? (
+                      <select name="type" value={formData.type} onChange={handleInputChange} className="admin-input">
+                        <option value="">Selecciona...</option>
+                        <option value="Universidad Pública">Universidad Pública</option>
+                        <option value="Universidad Privada">Universidad Privada</option>
+                        <option value="Centro de Investigación">Centro de Investigación</option>
+                        <option value="Empresa">Empresa</option>
+                      </select>
+                    ) : (
+                      <span className="admin-badge-type">{institution.type || '-'}</span>
+                    )}
+                  </td>
+                  <td>
+                    {editingId === institution.id ? (
+                      <input type="text" name="contactInfo" value={formData.contactInfo} onChange={handleInputChange} className="admin-input" />
+                    ) : (institution.contactInfo || '-')}
+                  </td>
+                  <td>
+                    {editingId === institution.id ? (
+                      <div className="admin-disciplines-select">
+                        {disciplines.map((disc) => (
+                          <label key={disc.id} className="admin-checkbox">
+                            <input type="checkbox" checked={selectedDisciplines.includes(disc.id)} onChange={() => toggleDiscipline(disc.id)} />
+                            {disc.name}
+                          </label>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="admin-disciplines-view">
+                        {institution.disciplines && institution.disciplines.length > 0 ? (
+                          institution.disciplines.map((d) => (
+                            <span key={d.id} className="admin-discipline-badge">{d.name}</span>
+                          ))
+                        ) : (<span className="admin-empty-text">Sin disciplinas</span>)}
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    {editingId === institution.id ? (
+                      <div className="admin-actions">
+                        <button className="admin-btn-save" onClick={handleSave}>Guardar</button>
+                        <button className="admin-btn-cancel" onClick={handleCancel}>Cancelar</button>
+                      </div>
+                    ) : (
+                      <div className="admin-actions">
+                        <button className="admin-btn-edit" onClick={() => handleEdit(institution)}>Editar</button>
+                        <button className="admin-btn-delete" onClick={() => handleDelete(institution.id)}>Eliminar</button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
-
-      {institutions.length === 0 && (
-        <div className="admin-empty-state">
-          <p>No hay instituciones registradas.</p>
-        </div>
-      )}
     </div>
   );
 }

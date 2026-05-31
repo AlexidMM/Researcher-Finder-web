@@ -1,0 +1,24 @@
+$primary-blue: #0a2540;
+$secondary-blue: #173a5e;
+$white: #ffffff;
+$text-muted: #6b7280;
+$border-soft: #e5e7eb;
+
+.info-panel-block {
+  background: $white;
+  border: 1px solid $border-soft;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+
+  h3 {
+    margin: 0 0 0.9rem;
+    color: $primary-blue;
+    font-size: 1.15rem;
+  }
+}
+
+.info-panel-content {
+  color: $text-muted;
+  line-height: 1.55;
+}

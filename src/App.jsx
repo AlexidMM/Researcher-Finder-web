@@ -2,7 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './modules/auth/Login';
 import Register from './modules/auth/Register';
 import StudentDashboard from './modules/student/StudentDashboard';
+import Explore from './modules/student/Explore';
 import Blog from './modules/shared/Blog';
+import Profile from './modules/shared/Profile';
 import AdminDashboard from './modules/admin/AdminDashboard';
 import ResearcherDashboard from './modules/researcher/ResearcherDashboard';
 import CreatePublication from './modules/researcher/CreatePublication';
@@ -19,9 +21,11 @@ function App() {
 
         {/* Rutas Privadas de Estudiantes */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />
+        <Route path="/explore" element={<Explore />} />
 
           {/* Nueva ruta para el Blog */}
         <Route path="/blog" element={<Blog />} />
+        <Route path="/profile" element={<Profile />} />
 
         {/* Rutas Privadas de Investigadores */}
         <Route path="/researcher/dashboard" element={<ResearcherDashboard />} />

@@ -1,0 +1,45 @@
+$primary-blue: #0a2540;
+$secondary-blue: #173a5e;
+$white: #ffffff;
+$border-soft: #e5e7eb;
+
+.filter-bar {
+  background: $white;
+  border: 1px solid $border-soft;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-bar-label {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: $secondary-blue;
+  font-weight: 800;
+}
+
+.filter-bar-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.filter-bar-btn {
+  border: 1px solid $border-soft;
+  background: #f8fafc;
+  color: $secondary-blue;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $secondary-blue;
+  }
+
+  &.is-active {
+    background: $primary-blue;
+    color: $white;
+    border-color: $primary-blue;
+  }
+}

@@ -163,25 +163,6 @@ body {
   .profile-container {
     position: relative;
 
-    .profile-icon-btn {
-      background: rgba($white, 0.1);
-      border: none;
-      color: $white;
-      font-size: 1.2rem;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: background-color 0.2s;
-
-      &:hover {
-        background-color: rgba($white, 0.2);
-      }
-    }
-
     .profile-dropdown {
       position: absolute;
       top: 120%;
@@ -225,9 +206,12 @@ body {
 /* Base de layout para los Dashboards */
 .dashboard-layout {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: $bg-light;
 
   .dashboard-content {
+    flex: 1;
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;

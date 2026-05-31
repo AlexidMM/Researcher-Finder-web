@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../shared/Navbar';
+import Footer from '../shared/Footer';
+import SectionHeader from '../shared/SectionHeader';
+import DashboardStats from '../shared/DashboardStats';
+import EmptyState from '../shared/EmptyState';
+import QuickActions from '../shared/QuickActions';
 import { apiFetch } from '../../utils/api';
 import './researcher-dashboard.scss';
 
@@ -56,6 +61,12 @@ export default function ResearcherDashboard() {
     project: 'Proyecto',
   };
 
+  const dashboardStats = [
+    { label: 'Publicaciones activas', value: myPublications.length, helpText: 'Oportunidades que puedes editar o retirar.' },
+    { label: 'Becas visibles', value: myPublications.filter((publication) => publication.type === 'scholarship').length, helpText: 'Publicaciones tipo beca.' },
+    { label: 'Estancias y proyectos', value: myPublications.filter((publication) => publication.type !== 'scholarship').length, helpText: 'Colaboraciones abiertas.' },
+  ];
+
   const getTypeClass = (type) => `type-${type || 'default'}`;
 
   const formatPublicationDate = (publication) => {
@@ -78,10 +89,20 @@ export default function ResearcherDashboard() {
       <Navbar />
       
       <main className="dashboard-content">
-        <header className="welcome-header researcher-header">
-          <h1>Panel de Investigador</h1>
-          <p>Administra tus publicaciones, vacantes de estancias o proyectos de investigación. Colabora con estudiantes interesados en tu investigación.</p>
-        </header>
+        <SectionHeader
+          className="researcher-header"
+          title="Panel de Investigador"
+          description="Administra tus publicaciones, vacantes de estancias o proyectos de investigación. Colabora con estudiantes interesados en tu investigación."
+        />
+
+        <QuickActions
+          title="Atajos de investigación"
+          items={[
+            { label: 'Crear publicación', description: 'Publica una beca, estancia o proyecto.', to: '/researcher/create-publication', variant: 'is-primary' },
+            { label: 'Ver perfil', description: 'Revisa y actualiza tu información.', to: '/profile', variant: 'is-accent' },
+            { label: 'Ir al blog', description: 'Explora el contenido visible para estudiantes.', to: '/blog' },
+          ]}
+        />
 
         <section className="actions-section">
           <button 
@@ -91,6 +112,8 @@ export default function ResearcherDashboard() {
             + Crear Nueva Publicación
           </button>
         </section>
+
+        <DashboardStats items={dashboardStats} />
 
         {error && <div className="researcher-error-box">{error}</div>}
 
@@ -141,19 +164,16 @@ export default function ResearcherDashboard() {
               ))}
             </div>
           ) : (
-            <div className="placeholder-card researcher-empty-card">
-              <h3>Aún no tienes publicaciones</h3>
-              <p>Crea tu primera publicación para empezar a colaborar con estudiantes interesados en tu investigación.</p>
-              <button
-                className="btn-create-first"
-                onClick={() => navigate('/researcher/create-publication')}
-              >
-                + Crear Primera Publicación
-              </button>
-            </div>
+            <EmptyState
+              title="Aún no tienes publicaciones"
+              description="Crea tu primera publicación para empezar a colaborar con estudiantes interesados en tu investigación."
+              actionLabel="+ Crear Primera Publicación"
+              onAction={() => navigate('/researcher/create-publication')}
+            />
           )}
         </section>
       </main>
+      <Footer />
     </div>
   );
 }

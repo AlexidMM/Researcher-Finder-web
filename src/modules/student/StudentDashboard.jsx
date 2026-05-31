@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import Navbar from '../shared/Navbar';
+import Footer from '../shared/Footer';
+import SectionHeader from '../shared/SectionHeader';
+import DashboardStats from '../shared/DashboardStats';
+import EmptyState from '../shared/EmptyState';
+import QuickActions from '../shared/QuickActions';
 import './student.scss';
 
 export default function StudentDashboard() {
@@ -7,6 +12,12 @@ export default function StudentDashboard() {
   const [webResults, setWebResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+
+  const searchStats = [
+    { label: 'Búsqueda actual', value: hasSearched ? 'Activa' : 'Lista', helpText: hasSearched ? 'Ya hay una búsqueda realizada.' : 'Escribe algo para empezar.' },
+    { label: 'Resultados', value: webResults.length, helpText: 'Coincidencias encontradas en Wikipedia.' },
+    { label: 'Estado', value: isSearching ? 'Buscando' : 'Listo', helpText: isSearching ? 'Procesando la consulta.' : 'Puedes lanzar otra búsqueda.' },
+  ];
 
   // --- FUNCIÓN PARA BUSCAR EN LA WEB (INTERNET) ---
   const handleWebSearch = async (e) => {
@@ -36,10 +47,21 @@ export default function StudentDashboard() {
       <Navbar />
       
       <main className="dashboard-content">
-        <header className="welcome-header">
-          <h1>Panel de Estudiante</h1>
-          <p>Investiga temas en la web y encuentra proyectos para tu estancia.</p>
-        </header>
+        <SectionHeader
+          title="Panel de Estudiante"
+          description="Investiga temas en la web y encuentra proyectos para tu estancia."
+        />
+
+        <QuickActions
+          title="Atajos de estudiante"
+          items={[
+            { label: 'Explorar oportunidades', description: 'Busca investigadores e instituciones.', to: '/explore', variant: 'is-primary' },
+            { label: 'Blog de oportunidades', description: 'Mira publicaciones activas disponibles.', to: '/blog', variant: 'is-accent' },
+            { label: 'Mi perfil', description: 'Actualiza tus datos personales.', to: '/profile' },
+          ]}
+        />
+
+        <DashboardStats items={searchStats} />
 
         {/* --- BUSCADOR WEB IN-APP --- */}
         <section className="web-search-section" style={{ marginBottom: '3rem' }}>
@@ -85,7 +107,11 @@ export default function StudentDashboard() {
             {hasSearched && (
               <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 {webResults.length === 0 && !isSearching ? (
-                  <p style={{ color: '#D32F2F' }}>No se encontraron artículos web para tu búsqueda.</p>
+                  <EmptyState
+                    compact
+                    title="Sin resultados"
+                    description="No se encontraron artículos web para tu búsqueda. Prueba con otro término más específico."
+                  />
                 ) : (
                   webResults.map((result) => (
                     <div key={result.pageid} style={{ padding: '1.5rem', border: '1px solid #eee', borderRadius: '8px', borderLeft: '4px solid #173A5E' }}>
@@ -112,6 +138,7 @@ export default function StudentDashboard() {
         </section>
 
       </main>
+      <Footer />
     </div>
   );
 }

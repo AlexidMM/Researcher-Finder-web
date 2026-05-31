@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../shared/Navbar';
+import Footer from '../shared/Footer';
+import SectionHeader from '../shared/SectionHeader';
 import { apiFetch } from '../../utils/api';
 import './researcher.scss';
 
@@ -83,10 +85,10 @@ export default function CreatePublication() {
       <Navbar />
       
       <main className="dashboard-content">
-        <header className="welcome-header">
-          <h1>Crear Nueva Publicación</h1>
-          <p>Comparte tu oportunidad de investigación, estancia o proyecto con estudiantes interesados.</p>
-        </header>
+        <SectionHeader
+          title="Crear Nueva Publicación"
+          description="Comparte tu oportunidad de investigación, estancia o proyecto con estudiantes interesados."
+        />
 
         <div className="create-form-container">
           <form onSubmit={handleSubmit} className="publication-form card">
@@ -143,6 +145,7 @@ export default function CreatePublication() {
           </form>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

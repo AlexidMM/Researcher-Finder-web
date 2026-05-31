@@ -1,0 +1,77 @@
+$primary-blue: #0a2540;
+$secondary-blue: #173a5e;
+$accent-gold: #f6c844;
+$white: #ffffff;
+$text-muted: #6b7280;
+$border-soft: #e5e7eb;
+
+.quick-actions {
+  background: $white;
+  border: 1px solid $border-soft;
+  border-radius: 16px;
+  padding: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.quick-actions-header h2 {
+  margin: 0 0 0.9rem;
+  color: $primary-blue;
+  font-size: 1.1rem;
+}
+
+.quick-actions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.quick-action-btn {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 180px;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid $border-soft;
+  background: linear-gradient(180deg, #fff, #fafafa);
+  color: $primary-blue;
+  text-decoration: none;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba($secondary-blue, 0.35);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+  }
+
+  &.is-primary {
+    background: linear-gradient(135deg, $primary-blue, $secondary-blue);
+    color: $white;
+    border-color: transparent;
+  }
+
+  &.is-accent {
+    background: linear-gradient(135deg, $accent-gold, #f3b900);
+    color: $primary-blue;
+    border-color: transparent;
+  }
+}
+
+.quick-action-title {
+  font-weight: 800;
+}
+
+.quick-action-desc {
+  font-size: 0.9rem;
+  color: $text-muted;
+  line-height: 1.45;
+}
+
+.quick-action-btn.is-primary .quick-action-desc,
+.quick-action-btn.is-accent .quick-action-desc {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.quick-action-btn.is-accent .quick-action-desc {
+  color: rgba(10, 37, 64, 0.78);
+}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../shared/Navbar';
+import Footer from '../shared/Footer';
 import { apiFetch } from '../../utils/api';
 import './researcher.scss';
 
@@ -107,6 +108,7 @@ export default function EditPublication() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

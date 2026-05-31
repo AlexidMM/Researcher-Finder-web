@@ -1,4 +1,6 @@
 import Navbar from '../shared/Navbar';
+import Footer from '../shared/Footer';
+import SectionHeader from '../shared/SectionHeader';
 import './admin.scss';
 
 import { useState } from 'react';
@@ -14,29 +16,29 @@ export default function AdminDashboard() {
       <Navbar />
       
       <main className="dashboard-content">
-        <header className="welcome-header">
-          <h1>Panel de Administrador@</h1>
-          <p>Administra investigadores, instituciones, disciplinas y publicaciones.</p>
-        </header>
+        <SectionHeader
+          title="Panel de Administrador@"
+          description="Administra investigadores, instituciones, disciplinas y publicaciones."
+        />
 
         <section className="admin-tabs">
           <button
             className={`admin-tab-btn ${activeTab === 'researchers' ? 'is-active' : ''}`}
             onClick={() => setActiveTab('researchers')}
           >
-            👨‍🔬 Investigadores
+            Investigadores
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'institutions' ? 'is-active' : ''}`}
             onClick={() => setActiveTab('institutions')}
           >
-            🏫 Instituciones
+            Instituciones
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'disciplines' ? 'is-active' : ''}`}
             onClick={() => setActiveTab('disciplines')}
           >
-            📚 Disciplinas
+            Disciplinas
           </button>
         </section>
 
@@ -46,6 +48,7 @@ export default function AdminDashboard() {
           {activeTab === 'disciplines' && <DisciplinesManager />}
         </section>
       </main>
+      <Footer />
     </div>
   );
 }

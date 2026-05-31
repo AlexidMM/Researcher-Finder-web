@@ -1,0 +1,34 @@
+$primary-blue: #0a2540;
+$secondary-blue: #173a5e;
+$border-soft: #e5e7eb;
+
+.modal-shell-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0;
+    color: $primary-blue;
+  }
+}
+
+.modal-shell-close {
+  border: none;
+  background: transparent;
+  color: $secondary-blue;
+  font-size: 1.35rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.modal-shell-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid $border-soft;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}

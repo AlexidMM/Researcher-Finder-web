@@ -142,6 +142,20 @@ $border-soft: #e5e7eb;
   font-size: 0.84rem;
 }
 
+.researcher-status-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 0.5rem;
+  font-size: 0.84rem;
+  color: $secondary-blue;
+  cursor: pointer;
+
+  input {
+    accent-color: $primary-blue;
+  }
+}
+
 .researcher-post-actions {
   display: flex;
   gap: 0.45rem;

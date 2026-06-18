@@ -6,6 +6,7 @@ import SectionHeader from '../shared/SectionHeader';
 import DashboardStats from '../shared/DashboardStats';
 import EmptyState from '../shared/EmptyState';
 import QuickActions from '../shared/QuickActions';
+import FlutterStatsEmbed from '../shared/FlutterStatsEmbed';
 import { apiFetch } from '../../utils/api';
 import './researcher-dashboard.scss';
 
@@ -15,9 +16,6 @@ export default function ResearcherDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Obtener datos del usuario actual
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-
   useEffect(() => {
     fetchMyPublications();
   }, []);
@@ -26,19 +24,30 @@ export default function ResearcherDashboard() {
     try {
       setLoading(true);
       setError('');
-      const data = await apiFetch('/publications');
-      
-      // Filtrar solo mis publicaciones
-      const myPubs = Array.isArray(data)
-        ? data.filter(pub => pub.author?.id === user.id)
-        : [];
-      
-      setMyPublications(myPubs);
+      const data = await apiFetch('/publications/mine');
+      setMyPublications(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err.message || 'Error al cargar tus publicaciones');
       console.error('Error:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleToggleStatus = async (publicationId, currentStatus) => {
+    try {
+      const updated = await apiFetch(`/publications/${publicationId}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: !currentStatus }),
+      });
+
+      setMyPublications((prev) =>
+        prev.map((publication) =>
+          publication.id === publicationId ? { ...publication, status: updated.status } : publication
+        )
+      );
+    } catch (err) {
+      alert(err.message || 'No se pudo actualizar el estado de la publicación');
     }
   };
 
@@ -62,9 +71,21 @@ export default function ResearcherDashboard() {
   };
 
   const dashboardStats = [
-    { label: 'Publicaciones activas', value: myPublications.length, helpText: 'Oportunidades que puedes editar o retirar.' },
-    { label: 'Becas visibles', value: myPublications.filter((publication) => publication.type === 'scholarship').length, helpText: 'Publicaciones tipo beca.' },
-    { label: 'Estancias y proyectos', value: myPublications.filter((publication) => publication.type !== 'scholarship').length, helpText: 'Colaboraciones abiertas.' },
+    {
+      label: 'Publicaciones activas',
+      value: myPublications.filter((publication) => publication.status).length,
+      helpText: 'Visibles para estudiantes en el directorio.',
+    },
+    {
+      label: 'Publicaciones cerradas',
+      value: myPublications.filter((publication) => !publication.status).length,
+      helpText: 'Oportunidades que ya no se muestran a alumnos.',
+    },
+    {
+      label: 'Becas visibles',
+      value: myPublications.filter((publication) => publication.type === 'scholarship' && publication.status).length,
+      helpText: 'Publicaciones tipo beca activas.',
+    },
   ];
 
   const getTypeClass = (type) => `type-${type || 'default'}`;
@@ -115,6 +136,8 @@ export default function ResearcherDashboard() {
 
         <DashboardStats items={dashboardStats} />
 
+        <FlutterStatsEmbed />
+
         {error && <div className="researcher-error-box">{error}</div>}
 
         <section className="my-posts-section">
@@ -139,6 +162,14 @@ export default function ResearcherDashboard() {
                       <span className="researcher-post-date">
                         {formatPublicationDate(publication)}
                       </span>
+                      <label className="researcher-status-toggle">
+                        <input
+                          type="checkbox"
+                          checked={Boolean(publication.status)}
+                          onChange={() => handleToggleStatus(publication.id, publication.status)}
+                        />
+                        <span>{publication.status ? 'Activa' : 'Cerrada'}</span>
+                      </label>
                     </div>
                     <div className="researcher-post-actions">
                       <button

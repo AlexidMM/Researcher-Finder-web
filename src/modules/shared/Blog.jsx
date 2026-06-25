@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import Navbar from './Navbar';
-import Footer from './Footer';
+import { Link } from 'react-router-dom';
+import PageShell from './PageShell';
 import SectionHeader from './SectionHeader';
 import DashboardStats from './DashboardStats';
 import EmptyState from './EmptyState';
@@ -127,10 +127,11 @@ export default function Blog() {
   };
 
   return (
-    <div className="dashboard-layout">
-      <Navbar />
-      
-      <main className="dashboard-content">
+    <>
+    <PageShell
+      wide
+      breadcrumb={<span>Blog / Oportunidades</span>}
+    >
         <SectionHeader
           className="blog-header"
           title="Blog de Oportunidades"
@@ -215,8 +216,7 @@ export default function Blog() {
             description="Vuelve más tarde para ver nuevas oportunidades o ajusta los filtros para explorar resultados distintos."
           />
         ) : null}
-      </main>
-      <Footer />
+    </PageShell>
 
       {modalOpen && modalData && (
         <div className="modal-overlay" onClick={closeModal}>
@@ -259,6 +259,6 @@ export default function Blog() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

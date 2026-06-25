@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import Navbar from './Navbar';
-import Footer from './Footer';
+import PageShell from './PageShell';
+import RoleBreadcrumb from './RoleBreadcrumb';
 import { apiFetch } from '../../utils/api';
 import './profile.scss';
 
@@ -208,19 +208,15 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="dashboard-layout">
-        <Navbar />
+      <PageShell breadcrumb={<RoleBreadcrumb current="Perfil" />}>
         <div className="profile-loading">Cargando perfil...</div>
-      </div>
+      </PageShell>
     );
   }
 
   return (
-    <div className="dashboard-layout">
-      <Navbar />
-
-      <main className="dashboard-content">
-        <div className="profile-card">
+    <PageShell wide breadcrumb={<RoleBreadcrumb current="Perfil" />}>
+      <div className="profile-card">
           <div className="profile-header">
             <div className="profile-avatar">
               {(profileData.firstName || formData.firstName).charAt(0)}{(profileData.lastNameP || formData.lastNameP).charAt(0)}
@@ -343,9 +339,7 @@ export default function Profile() {
               </button>
             </div>
           </form>
-        </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </PageShell>
   );
 }

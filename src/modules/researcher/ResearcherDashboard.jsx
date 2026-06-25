@@ -1,210 +1,83 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../shared/Navbar';
-import Footer from '../shared/Footer';
+import PageShell from '../shared/PageShell';
 import SectionHeader from '../shared/SectionHeader';
+import RoleBreadcrumb from '../shared/RoleBreadcrumb';
 import DashboardStats from '../shared/DashboardStats';
-import EmptyState from '../shared/EmptyState';
 import QuickActions from '../shared/QuickActions';
-import FlutterStatsEmbed from '../shared/FlutterStatsEmbed';
 import { apiFetch } from '../../utils/api';
-import './researcher-dashboard.scss';
 
 export default function ResearcherDashboard() {
   const navigate = useNavigate();
-  const [myPublications, setMyPublications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [stats, setStats] = useState({ active: 0, closed: 0, scholarships: 0 });
 
   useEffect(() => {
-    fetchMyPublications();
+    const loadStats = async () => {
+      try {
+        const data = await apiFetch('/publications/mine');
+        const publications = Array.isArray(data) ? data : [];
+        setStats({
+          active: publications.filter((p) => p.status).length,
+          closed: publications.filter((p) => !p.status).length,
+          scholarships: publications.filter((p) => p.type === 'scholarship' && p.status).length,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadStats();
   }, []);
 
-  const fetchMyPublications = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      const data = await apiFetch('/publications/mine');
-      setMyPublications(Array.isArray(data) ? data : []);
-    } catch (err) {
-      setError(err.message || 'Error al cargar tus publicaciones');
-      console.error('Error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleToggleStatus = async (publicationId, currentStatus) => {
-    try {
-      const updated = await apiFetch(`/publications/${publicationId}/status`, {
-        method: 'PATCH',
-        body: JSON.stringify({ status: !currentStatus }),
-      });
-
-      setMyPublications((prev) =>
-        prev.map((publication) =>
-          publication.id === publicationId ? { ...publication, status: updated.status } : publication
-        )
-      );
-    } catch (err) {
-      alert(err.message || 'No se pudo actualizar el estado de la publicación');
-    }
-  };
-
-  const handleDelete = async (publicationId) => {
-    const confirmed = window.confirm('¿Eliminar esta publicación? Esta acción no se puede deshacer.');
-    if (!confirmed) return;
-
-    try {
-      await apiFetch(`/publications/${publicationId}`, { method: 'DELETE' });
-      // Refrescar lista
-      fetchMyPublications();
-    } catch (err) {
-      alert(err.message || 'No se pudo eliminar la publicación');
-    }
-  };
-
-  const typeLabels = {
-    scholarship: 'Beca',
-    internship: 'Estancia',
-    project: 'Proyecto',
-  };
-
   const dashboardStats = [
-    {
-      label: 'Publicaciones activas',
-      value: myPublications.filter((publication) => publication.status).length,
-      helpText: 'Visibles para estudiantes en el directorio.',
-    },
-    {
-      label: 'Publicaciones cerradas',
-      value: myPublications.filter((publication) => !publication.status).length,
-      helpText: 'Oportunidades que ya no se muestran a alumnos.',
-    },
-    {
-      label: 'Becas visibles',
-      value: myPublications.filter((publication) => publication.type === 'scholarship' && publication.status).length,
-      helpText: 'Publicaciones tipo beca activas.',
-    },
+    { label: 'Activas', value: stats.active, helpText: 'Visibles para estudiantes.' },
+    { label: 'Cerradas', value: stats.closed, helpText: 'Ya no aparecen en el directorio.' },
+    { label: 'Becas activas', value: stats.scholarships, helpText: 'Publicaciones tipo beca.' },
   ];
 
-  const getTypeClass = (type) => `type-${type || 'default'}`;
-
-  const formatPublicationDate = (publication) => {
-    const raw = publication.createdAt || publication.created_at;
-    const parsedDate = raw ? new Date(raw) : null;
-
-    if (!parsedDate || Number.isNaN(parsedDate.getTime())) {
-      return 'Fecha no disponible';
-    }
-
-    return parsedDate.toLocaleDateString('es-MX', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
   return (
-    <div className="dashboard-layout">
-      <Navbar />
-      
-      <main className="dashboard-content">
-        <SectionHeader
-          className="researcher-header"
-          title="Panel de Investigador"
-          description="Administra tus publicaciones, vacantes de estancias o proyectos de investigación. Colabora con estudiantes interesados en tu investigación."
-        />
+    <PageShell
+      breadcrumb={<RoleBreadcrumb current="Inicio" />}
+    >
+      <SectionHeader
+        title="Panel de Investigador"
+        description="Resumen de tu actividad. Gestiona tus publicaciones desde la web; el wearable recibirá alertas vía API."
+      />
 
-        <QuickActions
-          title="Atajos de investigación"
-          items={[
-            { label: 'Crear publicación', description: 'Publica una beca, estancia o proyecto.', to: '/researcher/create-publication', variant: 'is-primary' },
-            { label: 'Ver perfil', description: 'Revisa y actualiza tu información.', to: '/profile', variant: 'is-accent' },
-            { label: 'Ir al blog', description: 'Explora el contenido visible para estudiantes.', to: '/blog' },
-          ]}
-        />
+      <DashboardStats items={dashboardStats} />
 
-        <section className="actions-section">
-          <button 
-            className="btn-create-post"
-            onClick={() => navigate('/researcher/create-publication')}
-          >
-            + Crear Nueva Publicación
-          </button>
-        </section>
+      <QuickActions
+        title="Accesos directos"
+        items={[
+          {
+            label: 'Nueva publicación',
+            description: 'Publica una beca, estancia o proyecto.',
+            to: '/researcher/create-publication',
+            variant: 'is-primary',
+          },
+          {
+            label: 'Mis publicaciones',
+            description: 'Edita, activa o cierra convocatorias.',
+            to: '/researcher/publications',
+            variant: 'is-accent',
+          },
+          {
+            label: 'Mi perfil',
+            description: 'Actualiza tu información.',
+            to: '/profile',
+          },
+        ]}
+      />
 
-        <DashboardStats items={dashboardStats} />
-
-        <FlutterStatsEmbed />
-
-        {error && <div className="researcher-error-box">{error}</div>}
-
-        <section className="my-posts-section">
-          {loading ? (
-            <div className="researcher-state-box">Cargando tus publicaciones...</div>
-          ) : myPublications.length > 0 ? (
-            <div className="researcher-posts-wrap">
-              <h2 className="researcher-posts-title">
-                Tus Publicaciones ({myPublications.length})
-              </h2>
-              {myPublications.map((publication) => (
-                <div
-                  key={publication.id}
-                  className={`researcher-post-card ${getTypeClass(publication.type)}`}
-                >
-                  <div className="researcher-post-head">
-                    <div className="researcher-post-main">
-                      <h3>{publication.title}</h3>
-                      <span className={`researcher-type-badge ${getTypeClass(publication.type)}`}>
-                        {typeLabels[publication.type] || publication.type}
-                      </span>
-                      <span className="researcher-post-date">
-                        {formatPublicationDate(publication)}
-                      </span>
-                      <label className="researcher-status-toggle">
-                        <input
-                          type="checkbox"
-                          checked={Boolean(publication.status)}
-                          onChange={() => handleToggleStatus(publication.id, publication.status)}
-                        />
-                        <span>{publication.status ? 'Activa' : 'Cerrada'}</span>
-                      </label>
-                    </div>
-                    <div className="researcher-post-actions">
-                      <button
-                        className="btn-post-edit"
-                        onClick={() => navigate(`/researcher/edit-publication/${publication.id}`)}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="btn-post-delete"
-                        onClick={() => handleDelete(publication.id)}
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                  <p className="researcher-post-description">
-                    {publication.description.length > 220
-                      ? `${publication.description.substring(0, 220)}...`
-                      : publication.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              title="Aún no tienes publicaciones"
-              description="Crea tu primera publicación para empezar a colaborar con estudiantes interesados en tu investigación."
-              actionLabel="+ Crear Primera Publicación"
-              onAction={() => navigate('/researcher/create-publication')}
-            />
-          )}
-        </section>
-      </main>
-      <Footer />
-    </div>
+      <section className="researcher-cta-banner">
+        <div>
+          <h2>¿Lista una nueva oportunidad?</h2>
+          <p>Publica desde la web; el wearable te avisará cuando cambie el estado.</p>
+        </div>
+        <button type="button" className="btn-create-post" onClick={() => navigate('/researcher/create-publication')}>
+          + Crear publicación
+        </button>
+      </section>
+    </PageShell>
   );
 }

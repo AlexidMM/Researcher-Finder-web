@@ -85,7 +85,7 @@ $text-muted: #666666;
 /* Create / Edit form styles */
 .create-form-container {
   display: flex;
-  justify-content: center;
+  justify-content: stretch;
   margin-top: 1.5rem;
 }
 
@@ -93,7 +93,7 @@ $text-muted: #666666;
   display: flex;
   gap: 1.5rem;
   width: 100%;
-  max-width: 980px;
+  max-width: 1100px;
   background: #fff;
   padding: 1.5rem;
   border-radius: 10px;

@@ -1,32 +1,14 @@
 @use 'sass:color';
 
-$primary-blue: #0A2540;
-$secondary-blue: #173A5E;
-$accent-gold: #F6C844;
-$bg-light: #F4F5F7;
-$white: #FFFFFF;
+$primary-blue: #0a2540;
+$secondary-blue: #173a5e;
+$accent-gold: #f6c844;
+$bg-light: #f4f5f7;
+$white: #ffffff;
 $text-dark: #333333;
 $text-muted: #666666;
 
-.dashboard-layout {
-  min-height: 100vh;
-  background-color: $bg-light;
-}
-
-.admin-dashboard-main {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 1.25rem;
-  align-items: start;
-}
-
-.admin-main-content {
-  min-width: 0;
-}
-
 .admin-sidebar {
-  position: sticky;
-  top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -34,12 +16,13 @@ $text-muted: #666666;
 
 .admin-sidebar-block {
   background: $white;
-  border-radius: 10px;
-  padding: 1rem;
+  border-radius: 12px;
+  padding: 1.1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
 
   h3 {
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.75rem;
     color: $primary-blue;
     font-size: 1rem;
   }
@@ -60,12 +43,21 @@ $text-muted: #666666;
   color: $secondary-blue;
   text-decoration: none;
   font-weight: 700;
-  padding: 0.55rem 0.8rem;
+  padding: 0.6rem 0.85rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba($accent-gold, 0.15);
+  }
 
   &.is-primary {
     background: $primary-blue;
     border-color: $primary-blue;
     color: $white;
+
+    &:hover {
+      background: $secondary-blue;
+    }
   }
 }
 
@@ -86,400 +78,301 @@ $text-muted: #666666;
   }
 }
 
-.dashboard-content {
-  padding: 2.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
+.admin-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
 
-  .welcome-header {
-    margin-bottom: 2rem;
+.admin-content {
+  background-color: $white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
 
-    h1 {
-      color: $primary-blue;
-      font-size: 2.2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      color: $text-muted;
-      font-size: 1.1rem;
-    }
-  }
-
-  // Tabs para gestores
-  .admin-tabs {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    border-bottom: 2px solid $bg-light;
-    padding-bottom: 0;
-
-    .admin-tab-btn {
-      background: none;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      color: $text-muted;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border-bottom: 3px solid transparent;
-      font-weight: 600;
-      position: relative;
-      bottom: -2px;
-
-      &:hover {
-        color: $primary-blue;
-      }
-
-      &.is-active {
-        color: $primary-blue;
-        border-bottom-color: $accent-gold;
-      }
-    }
-  }
-
-  // Contenedor de contenido admin
-  .admin-content {
-    background-color: $white;
-    border-radius: 8px;
+.admin-manager {
+  .admin-loading {
+    text-align: center;
     padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    color: $text-muted;
+    font-size: 1.05rem;
   }
 
-  // Manager común
-  .admin-manager {
-    .admin-loading {
-      text-align: center;
-      padding: 2rem;
-      color: $text-muted;
-      font-size: 1.1rem;
+  .admin-error {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    border-left: 4px solid #ef4444;
+  }
+
+  .admin-empty-state {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    color: $text-muted;
+    font-size: 1rem;
+  }
+
+  .admin-create-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .admin-form-container {
+    background-color: $bg-light;
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid $primary-blue;
+
+    h3 {
+      color: $primary-blue;
+      margin: 0 0 1rem;
+      font-size: 1.15rem;
+    }
+  }
+
+  .admin-form-group {
+    margin-bottom: 1rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.45rem;
+      font-weight: 600;
+      color: $text-dark;
+    }
+  }
+
+  .admin-form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .admin-input,
+  .admin-filter-input,
+  .admin-filter-select {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: $white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $accent-gold;
+      box-shadow: 0 0 0 3px rgba($accent-gold, 0.25);
+    }
+  }
+
+  .admin-textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  .admin-table-container {
+    overflow-x: auto;
+    margin-top: 0.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+  }
+
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: $white;
+
+    thead {
+      background-color: $bg-light;
+      border-bottom: 2px solid #dbe1ea;
+
+      th {
+        padding: 0.9rem 1.1rem;
+        text-align: left;
+        font-weight: 700;
+        color: $primary-blue;
+        font-size: 0.92rem;
+        white-space: nowrap;
+      }
     }
 
-    .admin-error {
-      background-color: #fee;
-      color: #c33;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      border-left: 4px solid #c33;
-    }
+    tbody {
+      tr {
+        border-bottom: 1px solid #eef2f7;
+        transition: background-color 0.2s ease;
 
-    .admin-empty-state {
-      text-align: center;
-      padding: 3rem 2rem;
-      color: $text-muted;
-      font-size: 1.1rem;
-    }
+        &:hover {
+          background-color: #f8fafc;
+        }
 
-    // Tabla
-    .admin-table-container {
-      overflow-x: auto;
-      margin-top: 1.5rem;
-    }
+        &:last-child {
+          border-bottom: none;
+        }
 
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: $white;
-
-      thead {
-        background-color: $bg-light;
-        border-bottom: 2px solid $text-muted;
-
-        th {
-          padding: 1rem;
-          text-align: left;
-          font-weight: 700;
+        td {
+          padding: 0.95rem 1.1rem;
           color: $text-dark;
-          font-size: 0.95rem;
-        }
-      }
-
-      tbody {
-        tr {
-          border-bottom: 1px solid $bg-light;
-          transition: background-color 0.3s ease;
-
-          &:hover {
-            background-color: $bg-light;
-          }
-
-          td {
-            padding: 1rem;
-            color: $text-dark;
-            vertical-align: middle;
-          }
+          vertical-align: middle;
+          line-height: 1.45;
         }
       }
     }
+  }
 
-    // Formularios inline
-    .admin-form-row {
+  .admin-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .admin-btn-edit,
+  .admin-btn-delete,
+  .admin-btn-save,
+  .admin-btn-cancel,
+  .admin-btn-create {
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0.5rem 0.9rem;
+  }
+
+  .admin-btn-create {
+    background-color: $primary-blue;
+    color: $white;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+
+    &:hover {
+      background-color: $secondary-blue;
+    }
+  }
+
+  .admin-btn-edit {
+    background-color: $accent-gold;
+    color: $primary-blue;
+
+    &:hover {
+      background-color: color.adjust($accent-gold, $lightness: -8%);
+    }
+  }
+
+  .admin-btn-delete {
+    background-color: #ef4444;
+    color: $white;
+
+    &:hover {
+      background-color: #dc2626;
+    }
+  }
+
+  .admin-btn-save {
+    background-color: #10b981;
+    color: $white;
+
+    &:hover {
+      background-color: #059669;
+    }
+  }
+
+  .admin-btn-cancel {
+    background-color: #e5e7eb;
+    color: $text-dark;
+
+    &:hover {
+      background-color: #d1d5db;
+    }
+  }
+
+  .admin-disciplines-select {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+
+    .admin-checkbox {
       display: flex;
+      align-items: center;
       gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .admin-input {
-      padding: 0.5rem 0.75rem;
-      border: 1px solid $text-muted;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-family: inherit;
-
-      &:focus {
-        outline: none;
-        border-color: $primary-blue;
-        box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
-      }
-    }
-
-    .admin-textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    // Disciplinas select
-    .admin-disciplines-select {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      padding: 0.5rem 0;
-
-      .admin-checkbox {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer;
-        font-size: 0.9rem;
-
-        input {
-          cursor: pointer;
-          width: 16px;
-          height: 16px;
-        }
-      }
-    }
-
-    // Disciplinas view
-    .admin-disciplines-view {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .admin-discipline-badge {
-      background-color: $bg-light;
-      color: $primary-blue;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border: 1px solid $primary-blue;
-    }
-
-    .admin-empty-text {
-      color: $text-muted;
-      font-size: 0.9rem;
-      font-style: italic;
-    }
-
-    // Acciones (botones)
-    .admin-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .admin-btn-edit,
-    .admin-btn-delete,
-    .admin-btn-save,
-    .admin-btn-cancel,
-    .admin-btn-create {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-    }
+      font-size: 0.9rem;
 
-    .admin-btn-edit {
-      background-color: $accent-gold;
-      color: $primary-blue;
-
-      &:hover {
-        background-color: color.adjust($accent-gold, $lightness: -10%);
+      input {
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        accent-color: $primary-blue;
       }
-    }
-
-    .admin-btn-delete {
-      background-color: #ee5a52;
-      color: $white;
-
-      &:hover {
-        background-color: color.adjust(#ee5a52, $lightness: -10%);
-      }
-    }
-
-    .admin-btn-save {
-      background-color: #4caf50;
-      color: $white;
-
-      &:hover {
-        background-color: color.adjust(#4caf50, $lightness: -10%);
-      }
-    }
-
-    .admin-btn-cancel {
-      background-color: $text-muted;
-      color: $white;
-
-      &:hover {
-        background-color: color.adjust($text-muted, $lightness: -10%);
-      }
-    }
-
-    .admin-btn-create {
-      background-color: $primary-blue;
-      color: $white;
-      padding: 0.75rem 1.5rem;
-
-      &:hover {
-        background-color: $accent-gold;
-        color: $primary-blue;
-      }
-    }
-
-    // Formulario container
-    .admin-form-container {
-      background-color: $bg-light;
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-      border-left: 4px solid $primary-blue;
-
-      h3 {
-        color: $primary-blue;
-        margin-bottom: 1rem;
-        font-size: 1.2rem;
-      }
-    }
-
-    .admin-form-group {
-      margin-bottom: 1rem;
-
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: $text-dark;
-      }
-    }
-
-    .admin-form-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .admin-create-section {
-      margin-bottom: 2rem;
     }
   }
 
-  .my-posts-section {
-    .placeholder-card {
-      background-color: $white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-      border-left: 5px solid $primary-blue; /* Toque azul marino para investigador */
-      
-      h3 {
-        color: $secondary-blue;
-        margin-bottom: 0.75rem;
-        font-size: 1.4rem;
-      }
+  .admin-disciplines-view {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
 
-      p {
-        color: $text-muted;
-        line-height: 1.5;
-      }
-    }
+  .admin-discipline-badge {
+    background-color: #eff6ff;
+    color: $primary-blue;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid #bfdbfe;
+  }
+
+  .admin-empty-text {
+    color: $text-muted;
+    font-size: 0.9rem;
+    font-style: italic;
   }
 }
 
-@media (max-width: 768px) {
-  .dashboard-content {
-    padding: 1.5rem;
-  }
-
-  .admin-dashboard-main {
-    grid-template-columns: 1fr;
-  }
-
-  .admin-sidebar {
-    position: static;
-  }
-}
-
-/* --- BARRA DE FILTROS (Admin) --- */
 .admin-filters-bar {
   display: flex;
-  gap: 15px;
-  margin-bottom: 25px;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
   background-color: $white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
 
   .admin-filter-input {
     flex: 2;
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.3s;
-
-    &:focus {
-      border-color: $accent-gold;
-    }
   }
 
   .admin-filter-select {
     flex: 1;
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    outline: none;
-    background-color: $white;
-    transition: border-color 0.3s;
-
-    &:focus {
-      border-color: $accent-gold;
-    }
   }
 }
 
-/* Etiqueta (Badge) para el Tipo de Institución en la tabla */
 .admin-badge-type {
   background-color: rgba($secondary-blue, 0.1);
   color: $secondary-blue;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.85rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
   font-weight: 600;
   display: inline-block;
   white-space: nowrap;
 }
 
-/* Ajustes responsivos para filtros en móvil */
 @media (max-width: 768px) {
   .admin-filters-bar {
     flex-direction: column;
-    gap: 10px;
+  }
+
+  .admin-manager .admin-table {
+    min-width: 640px;
   }
 }

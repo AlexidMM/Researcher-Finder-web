@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import Navbar from '../shared/Navbar';
-import Footer from '../shared/Footer';
+import PageShell from '../shared/PageShell';
 import SectionHeader from '../shared/SectionHeader';
+import RoleBreadcrumb from '../shared/RoleBreadcrumb';
 import InfoPanel from '../shared/InfoPanel';
 import ModalHeader from '../shared/ModalHeader';
-import ModalFooter from '../shared/ModalFooter';
 import { apiFetch } from '../../utils/api';
 import './explore.scss';
 
@@ -83,15 +82,16 @@ export default function Explore() {
   };
 
   return (
-    <div className="dashboard-layout">
-      <Navbar />
-      
-      <main className="dashboard-content">
-        <SectionHeader
-          className="explore-header"
-          title="Directorio de Exploración"
-          description="Encuentra a tu próximo mentor o descubre las instituciones con oportunidades activas."
-        />
+    <>
+    <PageShell
+      wide
+      breadcrumb={<RoleBreadcrumb current="Explorar" />}
+    >
+      <SectionHeader
+        className="explore-header"
+        title="Directorio de Exploración"
+        description="Encuentra a tu próximo mentor o descubre las instituciones con oportunidades activas."
+      />
 
         <section className="explore-controls">
           <div className="explore-tabs">
@@ -153,10 +153,8 @@ export default function Explore() {
             ))}
           </section>
         )}
-      </main>
-      <Footer />
+    </PageShell>
 
-      {/* MODAL DE DETALLES Y PUBLICACIONES */}
       {selectedItem && (
         <div className="explore-modal-overlay" onClick={closeModal}>
           <div className="explore-modal-card" onClick={e => e.stopPropagation()}>
@@ -209,6 +207,6 @@ export default function Explore() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

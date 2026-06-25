@@ -75,3 +75,64 @@ $text-muted: #666666;
     }
   }
 }
+
+.student-search-panel {
+  background: $white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.student-search-form {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.student-search-input {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.student-search-btn {
+  padding: 0 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background: $accent-gold;
+  color: $primary-blue;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.student-search-results {
+  display: grid;
+  gap: 1rem;
+}
+
+.student-search-card {
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid $secondary-blue;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  background: #fafbfc;
+
+  h3 {
+    color: $secondary-blue;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: $text-muted;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+
+  a {
+    color: $primary-blue;
+    font-weight: 700;
+    text-decoration: none;
+  }
+}

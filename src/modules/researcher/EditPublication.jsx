@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Navbar from '../shared/Navbar';
-import Footer from '../shared/Footer';
+import PageShell from '../shared/PageShell';
+import SectionHeader from '../shared/SectionHeader';
+import RoleBreadcrumb from '../shared/RoleBreadcrumb';
 import { apiFetch } from '../../utils/api';
 import './researcher.scss';
 
@@ -36,7 +37,7 @@ export default function EditPublication() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = async (e) => {
@@ -54,7 +55,7 @@ export default function EditPublication() {
         method: 'PATCH',
         body: JSON.stringify({ ...formData }),
       });
-      navigate('/researcher/dashboard');
+      navigate('/researcher/publications');
     } catch (err) {
       setError(err.message || 'Error al guardar');
     } finally {
@@ -63,52 +64,61 @@ export default function EditPublication() {
   };
 
   return (
-    <div className="dashboard-layout">
-      <Navbar />
-      <main className="dashboard-content">
-        <header className="welcome-header">
-          <h1>Editar Publicación</h1>
-          <p>Actualiza la información de tu publicación.</p>
-        </header>
+    <PageShell
+      wide
+      breadcrumb={<RoleBreadcrumb current="Editar publicación" />}
+    >
+      <SectionHeader
+        title="Editar Publicación"
+        description="Actualiza la información de tu convocatoria."
+      />
 
-        {loading ? (
-          <div className="placeholder-card"> Cargando...</div>
-        ) : (
-          <div className="create-form-container">
-            <form onSubmit={handleSave} className="publication-form card">
-              <div className="form-left">
-                <div className="form-group">
-                  <label>Título</label>
-                  <input name="title" value={formData.title} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Tipo</label>
-                  <select name="type" value={formData.type} onChange={handleChange}>
-                    <option value="scholarship">Beca de Investigación</option>
-                    <option value="internship">Estancia de Prácticas</option>
-                    <option value="project">Proyecto de Colaboración</option>
-                  </select>
-                </div>
+      {loading ? (
+        <div className="researcher-state-box">Cargando publicación...</div>
+      ) : (
+        <div className="create-form-container">
+          <form onSubmit={handleSave} className="publication-form card">
+            <div className="form-left">
+              <div className="form-group">
+                <label htmlFor="title">Título</label>
+                <input id="title" name="title" value={formData.title} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="type">Tipo</label>
+                <select id="type" name="type" value={formData.type} onChange={handleChange}>
+                  <option value="scholarship">Beca de Investigación</option>
+                  <option value="internship">Estancia de Prácticas</option>
+                  <option value="project">Proyecto de Colaboración</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="form-right">
+              <div className="form-group full-width">
+                <label htmlFor="description">Descripción</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  rows={8}
+                  value={formData.description}
+                  onChange={handleChange}
+                />
               </div>
 
-              <div className="form-right">
-                <div className="form-group full-width">
-                  <label>Descripción</label>
-                  <textarea name="description" rows={8} value={formData.description} onChange={handleChange} />
-                </div>
-
-                <div className="form-actions">
-                  <button type="button" className="btn-cancel" onClick={() => navigate('/researcher/dashboard')}>Cancelar</button>
-                  <button type="submit" className="btn-submit" disabled={saving}>{saving ? 'Guardando...' : 'Guardar cambios'}</button>
-                </div>
-
-                {error && <div className="alert alert-error"> {error}</div>}
+              <div className="form-actions">
+                <button type="button" className="btn-cancel" onClick={() => navigate('/researcher/publications')}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-submit" disabled={saving}>
+                  {saving ? 'Guardando...' : 'Guardar cambios'}
+                </button>
               </div>
-            </form>
-          </div>
-        )}
-      </main>
-      <Footer />
-    </div>
+
+              {error && <div className="alert alert-error">{error}</div>}
+            </div>
+          </form>
+        </div>
+      )}
+    </PageShell>
   );
 }

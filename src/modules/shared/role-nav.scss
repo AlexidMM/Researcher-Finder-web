@@ -1,0 +1,26 @@
+.role-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.role-nav__link {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+
+  &:hover,
+  &.is-active {
+    background-color: rgba(255, 255, 255, 0.14);
+  }
+
+  &.is-active {
+    box-shadow: inset 0 -2px 0 #f6c844;
+  }
+}

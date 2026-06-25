@@ -1,5 +1,4 @@
-import Navbar from './Navbar';
-import Footer from './Footer';
+import PageShell from './PageShell';
 import SectionHeader from './SectionHeader';
 import './info-pages.scss';
 
@@ -23,24 +22,23 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <div className="dashboard-layout">
-      <Navbar />
-      <main className="dashboard-content info-page-wrap">
-        <SectionHeader
-          title="Testimonios"
-          description="Experiencias de estudiantes, investigadores e instituciones que usan la plataforma."
-        />
+    <PageShell
+      wide
+      breadcrumb={<span>Testimonios</span>}
+    >
+      <SectionHeader
+        title="Testimonios"
+        description="Experiencias de estudiantes, investigadores e instituciones que usan la plataforma."
+      />
 
-        <section className="info-page-grid">
-          {testimonials.map((item) => (
-            <article key={item.id} className="info-page-card">
-              <p className="testimonial-quote">“{item.quote}”</p>
-              <p className="testimonial-author">{item.author}</p>
-            </article>
-          ))}
-        </section>
-      </main>
-      <Footer />
-    </div>
+      <section className="info-page-grid">
+        {testimonials.map((item) => (
+          <article key={item.id} className="info-page-card">
+            <p className="testimonial-quote">"{item.quote}"</p>
+            <p className="testimonial-author">{item.author}</p>
+          </article>
+        ))}
+      </section>
+    </PageShell>
   );
 }

@@ -7,9 +7,10 @@ export default function AdminSidebar({ counts }) {
       <div className="admin-sidebar-block">
         <h3>Acciones rápidas</h3>
         <div className="admin-sidebar-ctas">
-          <a href="#admin-tabs" className="admin-sidebar-btn is-primary">Ir a gestión</a>
+          <Link to="/admin/researchers" className="admin-sidebar-btn is-primary">Investigadores</Link>
+          <Link to="/admin/institutions" className="admin-sidebar-btn">Instituciones</Link>
+          <Link to="/admin/disciplines" className="admin-sidebar-btn">Disciplinas</Link>
           <Link to="/blog" className="admin-sidebar-btn">Ver blog público</Link>
-          <Link to="/profile" className="admin-sidebar-btn">Editar mi perfil</Link>
         </div>
       </div>
 

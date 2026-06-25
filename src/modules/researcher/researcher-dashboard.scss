@@ -189,6 +189,28 @@ $border-soft: #e5e7eb;
   word-break: break-word;
 }
 
+.researcher-cta-banner {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, $primary-blue, $secondary-blue);
+  color: $white;
+
+  h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.9;
+  }
+}
+
 .researcher-empty-card {
   background: $white;
   border: 1px solid $border-soft;

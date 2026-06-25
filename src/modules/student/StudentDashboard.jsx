@@ -1,144 +1,54 @@
-import { useState } from 'react';
-import Navbar from '../shared/Navbar';
-import Footer from '../shared/Footer';
+import PageShell from '../shared/PageShell';
 import SectionHeader from '../shared/SectionHeader';
+import RoleBreadcrumb from '../shared/RoleBreadcrumb';
 import DashboardStats from '../shared/DashboardStats';
-import EmptyState from '../shared/EmptyState';
 import QuickActions from '../shared/QuickActions';
-import './student.scss';
 
 export default function StudentDashboard() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [webResults, setWebResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-
-  const searchStats = [
-    { label: 'Búsqueda actual', value: hasSearched ? 'Activa' : 'Lista', helpText: hasSearched ? 'Ya hay una búsqueda realizada.' : 'Escribe algo para empezar.' },
-    { label: 'Resultados', value: webResults.length, helpText: 'Coincidencias encontradas en Wikipedia.' },
-    { label: 'Estado', value: isSearching ? 'Buscando' : 'Listo', helpText: isSearching ? 'Procesando la consulta.' : 'Puedes lanzar otra búsqueda.' },
+  const overviewStats = [
+    { label: 'Sección activa', value: 'Inicio', helpText: 'Resumen de tu espacio como estudiante.' },
+    { label: 'Exploración', value: 'Directorio', helpText: 'Investigadores e instituciones con oportunidades.' },
+    { label: 'Blog', value: 'Oportunidades', helpText: 'Publicaciones activas filtrables por tipo.' },
   ];
 
-  // --- FUNCIÓN PARA BUSCAR EN LA WEB (INTERNET) ---
-  const handleWebSearch = async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    setIsSearching(true);
-    setHasSearched(true);
-    
-    try {
-      // Consumiendo la API pública de Wikipedia para buscar artículos web
-      const endpoint = `https://es.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=5&srsearch=${encodeURIComponent(searchQuery)}`;
-      
-      const response = await fetch(endpoint);
-      const data = await response.json();
-      
-      setWebResults(data.query.search);
-    } catch (error) {
-      console.error("Error al buscar en la web:", error);
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
   return (
-    <div className="dashboard-layout">
-      <Navbar />
-      
-      <main className="dashboard-content">
-        <SectionHeader
-          title="Panel de Estudiante"
-          description="Investiga temas en la web y encuentra proyectos para tu estancia."
-        />
+    <PageShell
+      breadcrumb={<RoleBreadcrumb current="Inicio" />}
+    >
+      <SectionHeader
+        title="Panel de Estudiante"
+        description="Bienvenido. Desde aquí accede a las secciones principales sin amontonar todo en una sola pantalla."
+      />
 
-        <QuickActions
-          title="Atajos de estudiante"
-          items={[
-            { label: 'Explorar oportunidades', description: 'Busca investigadores e instituciones.', to: '/explore', variant: 'is-primary' },
-            { label: 'Blog de oportunidades', description: 'Mira publicaciones activas disponibles.', to: '/blog', variant: 'is-accent' },
-            { label: 'Mi perfil', description: 'Actualiza tus datos personales.', to: '/profile' },
-          ]}
-        />
+      <DashboardStats items={overviewStats} />
 
-        <DashboardStats items={searchStats} />
-
-        {/* --- BUSCADOR WEB IN-APP --- */}
-        <section className="web-search-section" style={{ marginBottom: '3rem' }}>
-          <div style={{ backgroundColor: '#fff', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ color: '#0A2540', marginBottom: '1rem', fontSize: '1.5rem' }}>Buscador Web de Conceptos</h2>
-            <p style={{ color: '#666', marginBottom: '1.5rem' }}>Busca información científica en internet sin salir de la plataforma.</p>
-            
-            <form onSubmit={handleWebSearch} style={{ display: 'flex', gap: '10px' }}>
-              <input 
-                type="text" 
-                placeholder="Ej. Inteligencia Artificial, Biología Molecular..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: '12px 20px',
-                  borderRadius: '8px',
-                  border: '1px solid #ccc',
-                  fontSize: '1rem',
-                  outline: 'none'
-                }}
-              />
-              <button 
-                type="submit"
-                disabled={isSearching}
-                style={{
-                  padding: '0 25px',
-                  backgroundColor: '#F6C844', // Accent gold
-                  color: '#0A2540', // Primary blue
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: isSearching ? 'not-allowed' : 'pointer',
-                  fontWeight: 'bold',
-                  fontSize: '1rem',
-                  transition: 'background-color 0.3s'
-                }}
-              >
-                {isSearching ? 'Buscando...' : 'Buscar en la Web'}
-              </button>
-            </form>
-
-            {/* RESULTADOS DE LA WEB */}
-            {hasSearched && (
-              <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                {webResults.length === 0 && !isSearching ? (
-                  <EmptyState
-                    compact
-                    title="Sin resultados"
-                    description="No se encontraron artículos web para tu búsqueda. Prueba con otro término más específico."
-                  />
-                ) : (
-                  webResults.map((result) => (
-                    <div key={result.pageid} style={{ padding: '1.5rem', border: '1px solid #eee', borderRadius: '8px', borderLeft: '4px solid #173A5E' }}>
-                      <h3 style={{ color: '#173A5E', marginBottom: '8px' }}>{result.title}</h3>
-                      {/* Wikipedia devuelve HTML seguro en el 'snippet' (para las negritas) */}
-                      <p 
-                        style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.5', marginBottom: '10px' }}
-                        dangerouslySetInnerHTML={{ __html: result.snippet + '...' }} 
-                      />
-                      <a 
-                        href={`https://es.wikipedia.org/?curid=${result.pageid}`}
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        style={{ color: '#0A2540', fontWeight: 'bold', textDecoration: 'none', fontSize: '0.9rem' }}
-                      >
-                        Leer artículo completo en nueva pestaña ↗
-                      </a>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-        </section>
-
-      </main>
-      <Footer />
-    </div>
+      <QuickActions
+        title="¿Qué quieres hacer?"
+        items={[
+          {
+            label: 'Explorar directorio',
+            description: 'Encuentra investigadores e instituciones.',
+            to: '/explore',
+            variant: 'is-primary',
+          },
+          {
+            label: 'Ver oportunidades',
+            description: 'Blog con becas, estancias y proyectos.',
+            to: '/blog',
+            variant: 'is-accent',
+          },
+          {
+            label: 'Buscar conceptos',
+            description: 'Búsqueda web de temas científicos.',
+            to: '/student/search',
+          },
+          {
+            label: 'Mi perfil',
+            description: 'Revisa y actualiza tus datos.',
+            to: '/profile',
+          },
+        ]}
+      />
+    </PageShell>
   );
 }

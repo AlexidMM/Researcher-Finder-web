@@ -1,41 +1,100 @@
-import { Link } from 'react-router-dom';
-import './footer.scss';
+import { Link } from "react-router-dom";
+import "./footer.scss";
 
 export default function Footer() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const role = user?.role;
 
-  const links = role === 'student'
-    ? [
-        { label: 'Dashboard', to: '/student/dashboard' },
-        { label: 'Explorar', to: '/explore' },
-        { label: 'Blog', to: '/blog' },
-        { label: 'Perfil', to: '/profile' },
-      ]
-    : role === 'researcher'
+  const links =
+    role === "student"
       ? [
-          { label: 'Dashboard', to: '/researcher/dashboard' },
-          { label: 'Blog', to: '/blog' },
-          { label: 'Perfil', to: '/profile' },
+          { label: "Dashboard", to: "/student/dashboard" },
+          { label: "Explorar", to: "/explore" },
+          { label: "Blog", to: "/blog" },
+          { label: "Perfil", to: "/profile" },
         ]
-      : role === 'admin'
+      : role === "researcher"
         ? [
-            { label: 'Dashboard', to: '/admin/dashboard' },
-            { label: 'Blog', to: '/blog' },
-            { label: 'Perfil', to: '/profile' },
+            { label: "Dashboard", to: "/researcher/dashboard" },
+            { label: "Blog", to: "/blog" },
+            { label: "Perfil", to: "/profile" },
           ]
-        : [
-            { label: 'Iniciar sesión', to: '/' },
-            { label: 'Registrarse', to: '/register' },
-            { label: 'Blog', to: '/blog' },
-          ];
+        : role === "admin"
+          ? [
+              { label: "Dashboard", to: "/admin/dashboard" },
+              { label: "Blog", to: "/blog" },
+              { label: "Perfil", to: "/profile" },
+            ]
+          : [
+              { label: "Iniciar sesión", to: "/" },
+              { label: "Registrarse", to: "/register" },
+              { label: "Blog", to: "/blog" },
+            ];
 
   return (
     <footer className="site-footer">
       <div className="site-footer-inner">
         <div className="footer-brand">
           <span className="footer-brand-name">Researcher Finder</span>
-          <p>Conectando estudiantes, investigadores e instituciones con oportunidades reales.</p>
+          <p>
+            Conectando estudiantes, investigadores e instituciones con
+            oportunidades reales.
+          </p>
+
+          {/* 8. Datos de Contacto */}
+          <div
+            style={{
+              marginTop: "1rem",
+              fontSize: "0.9rem",
+              color: "rgba(255,255,255,0.8)",
+            }}
+          >
+            <p style={{ margin: "0.2rem 0" }}>
+              Av. Pie de la Cuesta, Querétaro, Qro.
+            </p>
+            <p style={{ margin: "0.2rem 0" }}>contacto@researcherfinder.mx</p>
+            <p style={{ margin: "0.2rem 0" }}>+52 (442) 000 0000</p>
+          </div>
+
+          {/* 9. Botones de Redes Sociales */}
+          <div style={{ display: "flex", gap: "10px", marginTop: "1rem" }}>
+            <a
+              href="#"
+              style={{
+                textDecoration: "none",
+                background: "#173a5e",
+                padding: "0.4rem 0.8rem",
+                borderRadius: "4px",
+                color: "white",
+              }}
+            >
+              FB
+            </a>
+            <a
+              href="#"
+              style={{
+                textDecoration: "none",
+                background: "#173a5e",
+                padding: "0.4rem 0.8rem",
+                borderRadius: "4px",
+                color: "white",
+              }}
+            >
+              IG
+            </a>
+            <a
+              href="#"
+              style={{
+                textDecoration: "none",
+                background: "#173a5e",
+                padding: "0.4rem 0.8rem",
+                borderRadius: "4px",
+                color: "white",
+              }}
+            >
+              X
+            </a>
+          </div>
         </div>
 
         <div className="footer-links-group">
@@ -47,17 +106,88 @@ export default function Footer() {
               </Link>
             ))}
           </nav>
+
+          {/* 12. Mapa de Ubicación (Pantalla/Espacio para la imagen) */}
+          <div
+            style={{
+              marginTop: "2rem",
+              background: "#173a5e",
+              padding: "1rem",
+              textAlign: "center",
+              borderRadius: "8px",
+              border: "1px dashed #f6c844",
+            }}
+          >
+            <p style={{ margin: 0, color: "#f6c844", fontSize: "0.85rem" }}>
+              [ Imagen del Mapa Aquí ]
+            </p>
+            {/* 7. Imágenes complementarias: Aquí pondrás tu etiqueta <img src="..." /> más adelante */}
+          </div>
         </div>
 
         <div className="footer-meta">
-          <h4>Contacto</h4>
-          <p>Proyecto académico UTEQ</p>
-          <p>Disponible para navegación interna y gestión de oportunidades</p>
+          <h4>Soporte y Contacto</h4>
           <nav className="footer-links" aria-label="Información del sitio">
-            <Link to="/about" className="footer-link">Acerca de</Link>
-            <Link to="/testimonials" className="footer-link">Testimonios</Link>
-            <Link to="/cookies" className="footer-link">Aviso de cookies</Link>
+            <Link to="/about" className="footer-link">
+              Acerca de
+            </Link>
+            <Link to="/testimonials" className="footer-link">
+              Testimonios
+            </Link>
+            <Link to="/cookies" className="footer-link">
+              Aviso de cookies
+            </Link>
           </nav>
+
+          {/* 10. Formulario de Contacto (Para quejas o dudas jaja) */}
+          <div style={{ marginTop: "1.5rem" }}>
+            <h5 style={{ margin: "0 0 0.5rem 0", color: "#f6c844" }}>
+              Buzón de Quejas / Dudas
+            </h5>
+            <form
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+              }}
+            >
+              <input
+                type="email"
+                placeholder="Tu correo"
+                style={{
+                  padding: "0.5rem",
+                  borderRadius: "4px",
+                  border: "none",
+                  fontSize: "0.85rem",
+                }}
+              />
+              <textarea
+                placeholder="¿En qué te ayudamos?"
+                rows="2"
+                style={{
+                  padding: "0.5rem",
+                  borderRadius: "4px",
+                  border: "none",
+                  resize: "vertical",
+                  fontSize: "0.85rem",
+                }}
+              ></textarea>
+              <button
+                type="button"
+                style={{
+                  background: "#f6c844",
+                  color: "#0a2540",
+                  border: "none",
+                  padding: "0.5rem",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                }}
+              >
+                Enviar
+              </button>
+            </form>
+          </div>
         </div>
       </div>
 

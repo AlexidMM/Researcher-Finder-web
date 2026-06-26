@@ -26,6 +26,9 @@ export default function AdminSidebar({ counts = {} }) {
           <Link to="/blog" className="admin-sidebar-btn">
             Ver blog público
           </Link>
+          <Link to="/admin/contacts" className="admin-sidebar-btn">
+            Ver mensajes de contacto
+          </Link>
         </div>
       </div>
 

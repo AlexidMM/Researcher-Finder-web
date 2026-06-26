@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { apiFetch } from "../../utils/api";
 import "./footer.scss";
 
 export default function Footer() {
@@ -30,6 +32,28 @@ export default function Footer() {
               { label: "Registrarse", to: "/register" },
               { label: "Blog", to: "/blog" },
             ];
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !message) return alert("Por favor, llena los campos.");
+
+    try {
+      // Ajusta las opciones de apiFetch según cómo lo tengas configurado, pero suele ser así:
+      await apiFetch("/contacts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, message }),
+      });
+      alert("¡Mensaje enviado con éxito!");
+      setEmail("");
+      setMessage("");
+    } catch (error) {
+      console.error(error);
+      alert("Error al enviar el mensaje.");
+    }
+  };
 
   return (
     <footer className="site-footer">
@@ -106,23 +130,6 @@ export default function Footer() {
               </Link>
             ))}
           </nav>
-
-          {/* 12. Mapa de Ubicación (Pantalla/Espacio para la imagen) */}
-          <div
-            style={{
-              marginTop: "2rem",
-              background: "#173a5e",
-              padding: "1rem",
-              textAlign: "center",
-              borderRadius: "8px",
-              border: "1px dashed #f6c844",
-            }}
-          >
-            <p style={{ margin: 0, color: "#f6c844", fontSize: "0.85rem" }}>
-              [ Imagen del Mapa Aquí ]
-            </p>
-            {/* 7. Imágenes complementarias: Aquí pondrás tu etiqueta <img src="..." /> más adelante */}
-          </div>
         </div>
 
         <div className="footer-meta">
@@ -137,14 +144,19 @@ export default function Footer() {
             <Link to="/cookies" className="footer-link">
               Aviso de cookies
             </Link>
+            <Link to="/ubicacion" className="footer-link">
+              Mapa de Sitio
+            </Link>
           </nav>
 
-          {/* 10. Formulario de Contacto (Para quejas o dudas jaja) */}
+          {/* 10. Formulario de Contacto */}
           <div style={{ marginTop: "1.5rem" }}>
             <h5 style={{ margin: "0 0 0.5rem 0", color: "#f6c844" }}>
               Buzón de Quejas / Dudas
             </h5>
+            {/* AGREGAMOS onSubmit */}
             <form
+              onSubmit={handleSubmit}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -154,6 +166,8 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Tu correo"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 style={{
                   padding: "0.5rem",
                   borderRadius: "4px",
@@ -164,6 +178,8 @@ export default function Footer() {
               <textarea
                 placeholder="¿En qué te ayudamos?"
                 rows="2"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 style={{
                   padding: "0.5rem",
                   borderRadius: "4px",
@@ -171,9 +187,10 @@ export default function Footer() {
                   resize: "vertical",
                   fontSize: "0.85rem",
                 }}
-              ></textarea>
+              />
+              {/* CAMBIAMOS A type="submit" */}
               <button
-                type="button"
+                type="submit"
                 style={{
                   background: "#f6c844",
                   color: "#0a2540",

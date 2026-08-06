@@ -12,6 +12,18 @@ $text-muted: #666666;
   background-color: $bg-light;
 }
 
+.explore-image {
+  width: 100%;
+  max-width: 800px; /* Evita que se haga gigante en pantallas enormes */
+  max-height: 60vh; /* Nunca será más alta que el 60% de tu pantalla */
+  object-fit: contain; /* Muestra la imagen COMPLETA sin recortar */
+  display: block; /* Permite centrarla */
+  margin: 0 auto 2rem auto; /* Centra la imagen horizontalmente */
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
 .dashboard-content {
   padding: 2.5rem;
   max-width: 1200px;

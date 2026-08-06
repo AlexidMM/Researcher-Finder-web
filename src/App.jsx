@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import Login from "./modules/auth/Login";
 import Register from "./modules/auth/Register";
 import StudentDashboard from "./modules/student/StudentDashboard";
@@ -19,50 +20,61 @@ import ResearcherPublications from "./modules/researcher/ResearcherPublications"
 import CreatePublication from "./modules/researcher/CreatePublication";
 import EditPublication from "./modules/researcher/EditPublication";
 import Ubicacion from "./modules/shared/Ubicacion";
+import Privacy from "./modules/shared/Privacy";
 
 import "./styles.scss";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
-        <Route path="/student/search" element={<StudentSearch />} />
-        <Route path="/explore" element={<Explore />} />
+          <Route path="/student/dashboard" element={<StudentDashboard />} />
+          <Route path="/student/search" element={<StudentSearch />} />
+          <Route path="/explore" element={<Explore />} />
 
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/testimonials" element={<Testimonials />} />
-        <Route path="/cookies" element={<CookiesNotice />} />
-        <Route path="/ubicacion" element={<Ubicacion />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/testimonials" element={<Testimonials />} />
+          <Route path="/cookies" element={<CookiesNotice />} />
+          <Route path="/ubicacion" element={<Ubicacion />} />
+          <Route path="/privacy" element={<Privacy />} />
 
-        <Route path="/researcher/dashboard" element={<ResearcherDashboard />} />
-        <Route
-          path="/researcher/publications"
-          element={<ResearcherPublications />}
-        />
-        <Route
-          path="/researcher/create-publication"
-          element={<CreatePublication />}
-        />
-        <Route
-          path="/researcher/edit-publication/:id"
-          element={<EditPublication />}
-        />
+          <Route
+            path="/researcher/dashboard"
+            element={<ResearcherDashboard />}
+          />
+          <Route
+            path="/researcher/publications"
+            element={<ResearcherPublications />}
+          />
+          <Route
+            path="/researcher/create-publication"
+            element={<CreatePublication />}
+          />
+          <Route
+            path="/researcher/edit-publication/:id"
+            element={<EditPublication />}
+          />
 
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/researchers" element={<AdminResearchersPage />} />
-        <Route path="/admin/institutions" element={<AdminInstitutionsPage />} />
-        <Route path="/admin/disciplines" element={<AdminDisciplinesPage />} />
-        <Route path="/admin/contacts" element={<AdminContactsPage />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/researchers" element={<AdminResearchersPage />} />
+          <Route
+            path="/admin/institutions"
+            element={<AdminInstitutionsPage />}
+          />
+          <Route path="/admin/disciplines" element={<AdminDisciplinesPage />} />
+          <Route path="/admin/contacts" element={<AdminContactsPage />} />
 
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </BrowserRouter>
+      <Analytics />
+    </>
   );
 }
 

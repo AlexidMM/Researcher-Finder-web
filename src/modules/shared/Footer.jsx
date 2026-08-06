@@ -14,12 +14,14 @@ export default function Footer() {
           { label: "Explorar", to: "/explore" },
           { label: "Blog", to: "/blog" },
           { label: "Perfil", to: "/profile" },
+          { label: "Privacidad", to: "/privacy" },
         ]
       : role === "researcher"
         ? [
             { label: "Dashboard", to: "/researcher/dashboard" },
             { label: "Blog", to: "/blog" },
             { label: "Perfil", to: "/profile" },
+            { label: "Privacidad", to: "/privacy" },
           ]
         : role === "admin"
           ? [
@@ -143,6 +145,9 @@ export default function Footer() {
             </Link>
             <Link to="/cookies" className="footer-link">
               Aviso de cookies
+            </Link>
+            <Link to="/privacy" className="footer-link">
+              Aviso de Privacidad
             </Link>
             <Link to="/ubicacion" className="footer-link">
               Mapa de Sitio

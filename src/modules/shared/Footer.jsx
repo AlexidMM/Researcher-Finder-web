@@ -85,7 +85,7 @@ export default function Footer() {
           {/* 9. Botones de Redes Sociales */}
           <div style={{ display: "flex", gap: "10px", marginTop: "1rem" }}>
             <a
-              href="#"
+              href="https://www.facebook.com/Uteq.edu.mx/"
               style={{
                 textDecoration: "none",
                 background: "#173a5e",
@@ -97,7 +97,7 @@ export default function Footer() {
               FB
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/uteq_oficial/"
               style={{
                 textDecoration: "none",
                 background: "#173a5e",
@@ -109,7 +109,7 @@ export default function Footer() {
               IG
             </a>
             <a
-              href="#"
+              href="https://twitter.com/PrensaUTEQ"
               style={{
                 textDecoration: "none",
                 background: "#173a5e",

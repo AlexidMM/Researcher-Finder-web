@@ -1,0 +1,8 @@
+{
+  "sitio": "Researcher Finder",
+  "descripcion": "Plataforma para buscar investigadores",
+  "investigadores": [
+    { "nombre": "Alejandro Castañeda", "area": "Inteligencia Artificial" },
+    { "nombre": "Monserrat Nose", "area": "Redes" }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "sitio": "Researcher Finder",
+  "investigadores": [
+    { "nombre": "Ana Pérez", "area": "Inteligencia Artificial" },
+    { "nombre": "Luis Gómez", "area": "Redes y Comunicaciones" },
+    { "nombre": "María Torres", "area": "Ciencia de Datos" }
+  ]
+}

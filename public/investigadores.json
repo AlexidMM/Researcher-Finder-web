@@ -1,8 +1,8 @@
 {
   "sitio": "Researcher Finder",
-  "descripcion": "Plataforma para buscar investigadores",
   "investigadores": [
-    { "nombre": "Alejandro Castañeda", "area": "Inteligencia Artificial" },
-    { "nombre": "Monserrat Nose", "area": "Redes" }
+    { "nombre": "Ana Pérez", "area": "Inteligencia Artificial" },
+    { "nombre": "Luis Gómez", "area": "Redes y Comunicaciones" },
+    { "nombre": "María Torres", "area": "Ciencia de Datos" }
   ]
 }

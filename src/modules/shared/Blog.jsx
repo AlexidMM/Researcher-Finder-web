@@ -182,8 +182,14 @@ export default function Blog() {
                 <p className="blog-card-meta">
                   <span className="meta-label">Institucion:</span> {getInstitutionName(publication)}
                 </p>
+                
+                {/* MOSTRAR LABORATORIO SI EXISTE */}
+                {publication.laboratory && (
+                   <p className="blog-card-meta">
+                     <span className="meta-label">Sede:</span> {publication.laboratory.name}
+                   </p>
+                )}
 
-                {/* Apartado de disciplinas separado y limpio */}
                 <div className="blog-card-disciplines">
                   {publication.author?.researcher?.disciplines && publication.author.researcher.disciplines.length > 0 ? (
                     <>
@@ -231,15 +237,24 @@ export default function Blog() {
                 <p><strong>Descripcion:</strong> {modalData.description}</p>
               </InfoPanel>
 
-              <InfoPanel title="Info del investigador" className="blog-modal-panel">
+              <InfoPanel title="Sede y Contacto" className="blog-modal-panel">
                 <p><strong>Nombre:</strong> {getAuthorName(modalData)}</p>
                 <p><strong>Correo:</strong> {modalData.author?.email || 'No disponible'}</p>
                 <p><strong>Institucion:</strong> {getInstitutionName(modalData)}</p>
                 <p><strong>Acronimo:</strong> {modalData.author?.researcher?.affiliation?.acronym || 'No disponible'}</p>
-                <p><strong>Contacto:</strong> {modalData.author?.researcher?.affiliation?.contactInfo || 'No disponible'}</p>
+                <p><strong>Contacto Intitución:</strong> {modalData.author?.researcher?.affiliation?.contactInfo || 'No disponible'}</p>
+                
+                {/* MOSTRAR LABORATORIO EN EL MODAL */}
+                {modalData.laboratory && (
+                  <div style={{marginTop: '1rem', padding: '0.8rem', backgroundColor: '#f5f7fa', borderRadius: '6px', border: '1px solid #e2e8f0'}}>
+                    <p style={{marginBottom: '0.5rem', color: '#1e293b'}}><strong>📍 Sede Física:</strong></p>
+                    <p><strong>Laboratorio:</strong> {modalData.laboratory.name}</p>
+                    <p><strong>Dirección:</strong> {modalData.laboratory.address}</p>
+                  </div>
+                )}
                 
                 {modalData.author?.researcher?.disciplines && modalData.author.researcher.disciplines.length > 0 && (
-                  <div className="blog-modal-disciplines">
+                  <div className="blog-modal-disciplines" style={{marginTop: '1rem'}}>
                     <p><strong>Áreas de experiencia:</strong></p>
                     <div className="blog-modal-disciplines-list">
                       {modalData.author.researcher.disciplines.map((d) => (

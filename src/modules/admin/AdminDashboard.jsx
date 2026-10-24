@@ -11,6 +11,7 @@ export default function AdminDashboard() {
   const [counts, setCounts] = useState({
     researchers: 0,
     institutions: 0,
+    laboratories: 0,
     disciplines: 0,
     publications: 0,
     pending: 0,
@@ -19,15 +20,17 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const [res, inst, disc, pubs] = await Promise.all([
+        const [res, inst, labs, disc, pubs] = await Promise.all([
           apiFetch("/researchers"),
           apiFetch("/institutions"),
+          apiFetch("/laboratories"),
           apiFetch("/disciplines"),
           apiFetch("/publications"),
         ]);
         setCounts({
           researchers: (res || []).length,
           institutions: (inst || []).length,
+          laboratories: (labs || []).length,
           disciplines: (disc || []).length,
           publications: (pubs || []).filter((p) => p.status === true).length,
           pending: (pubs || []).filter((p) => p.status === false).length,
@@ -61,6 +64,11 @@ export default function AdminDashboard() {
           title="Instituciones"
           value={counts.institutions}
           subtitle="Registradas"
+        />
+        <HighlightCard
+          title="Laboratorios"
+          value={counts.laboratories}
+          subtitle="Sedes físicas"
         />
         <HighlightCard
           title="Disciplinas"

@@ -23,6 +23,9 @@ export default function AdminSidebar({ counts = {} }) {
           <Link to="/admin/disciplines" className="admin-sidebar-btn">
             Disciplinas
           </Link>
+          <Link to="/admin/laboratories" className="admin-sidebar-btn">
+            Laboratorios
+          </Link>
           <Link to="/blog" className="admin-sidebar-btn">
             Ver blog público
           </Link>
@@ -36,9 +39,9 @@ export default function AdminSidebar({ counts = {} }) {
         <h3>Estado general</h3>
         <TagList
           items={[
-            // Agregamos un || 0 para que ponga un cero si no encuentra el número
             `Investigadores: ${counts.researchers || 0}`,
             `Instituciones: ${counts.institutions || 0}`,
+            `Laboratorios: ${counts.laboratories || 0}`,
             `Disciplinas: ${counts.disciplines || 0}`,
             `Publicaciones activas: ${counts.publications || 0}`,
             `Pendientes: ${counts.pending || 0}`,

@@ -12,21 +12,43 @@ export default function EditPublication() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [formData, setFormData] = useState({ title: '', description: '', type: 'scholarship' });
+  const [laboratories, setLaboratories] = useState([]);
+  const [formData, setFormData] = useState({ 
+    title: '', 
+    description: '', 
+    type: 'scholarship',
+    laboratoryId: '' 
+  });
 
   useEffect(() => {
     if (!id) return;
-    loadPublication();
+    loadData();
   }, [id]);
 
-  const loadPublication = async () => {
+  const loadData = async () => {
     try {
       setLoading(true);
-      const data = await apiFetch(`/publications/${id}`);
+      
+      const [pubData, allLabs] = await Promise.all([
+        apiFetch(`/publications/${id}`),
+        apiFetch('/laboratories')
+      ]);
+
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      let profile;
+      try { profile = await apiFetch(`/users/${user.id}`); } catch (e) { profile = {}; }
+      
+      const myLabs = allLabs.filter(lab => 
+        (lab.researcher?.id === profile.researcher?.id) || 
+        (lab.institution?.id === profile.researcher?.affiliation?.id)
+      );
+      setLaboratories(myLabs.length > 0 ? myLabs : allLabs); 
+
       setFormData({
-        title: data.title || '',
-        description: data.description || '',
-        type: data.type || 'scholarship',
+        title: pubData.title || '',
+        description: pubData.description || '',
+        type: pubData.type || 'scholarship',
+        laboratoryId: pubData.laboratory?.id || '',
       });
     } catch (err) {
       setError(err.message || 'No se pudo cargar la publicación');
@@ -51,9 +73,14 @@ export default function EditPublication() {
 
     try {
       setSaving(true);
+      const payload = {
+        ...formData,
+        laboratoryId: formData.laboratoryId ? parseInt(formData.laboratoryId) : null
+      };
+
       await apiFetch(`/publications/${id}`, {
         method: 'PATCH',
-        body: JSON.stringify({ ...formData }),
+        body: JSON.stringify(payload),
       });
       navigate('/researcher/publications');
     } catch (err) {
@@ -89,6 +116,17 @@ export default function EditPublication() {
                   <option value="scholarship">Beca de Investigación</option>
                   <option value="internship">Estancia de Prácticas</option>
                   <option value="project">Proyecto de Colaboración</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="laboratoryId">Sede / Laboratorio</label>
+                <select id="laboratoryId" name="laboratoryId" value={formData.laboratoryId} onChange={handleChange}>
+                  <option value="">No especificar sede</option>
+                  {laboratories.map((lab) => (
+                    <option key={lab.id} value={lab.id}>
+                      {lab.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

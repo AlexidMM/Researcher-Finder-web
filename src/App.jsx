@@ -12,6 +12,7 @@ import CookiesNotice from "./modules/shared/CookiesNotice";
 import AdminDashboard from "./modules/admin/AdminDashboard";
 import AdminResearchersPage from "./modules/admin/AdminResearchersPage";
 import AdminInstitutionsPage from "./modules/admin/AdminInstitutionsPage";
+import AdminLaboratoriesPage from "./modules/admin/AdminLaboratoriesPage";
 import AdminDisciplinesPage from "./modules/admin/AdminDisciplinesPage";
 import AdminContactsPage from "./modules/admin/AdminContactsPage";
 import ResearcherDashboard from "./modules/researcher/ResearcherDashboard";
@@ -65,6 +66,10 @@ function App() {
           <Route
             path="/admin/institutions"
             element={<AdminInstitutionsPage />}
+          />
+          <Route
+            path="/admin/laboratories"
+            element={<AdminLaboratoriesPage />}
           />
           <Route path="/admin/disciplines" element={<AdminDisciplinesPage />} />
           <Route path="/admin/contacts" element={<AdminContactsPage />} />

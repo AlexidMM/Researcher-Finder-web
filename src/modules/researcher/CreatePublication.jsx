@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageShell from '../shared/PageShell';
 import SectionHeader from '../shared/SectionHeader';
@@ -11,12 +11,42 @@ export default function CreatePublication() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [laboratories, setLaboratories] = useState([]);
 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     type: 'scholarship',
+    laboratoryId: '',
   });
+
+  useEffect(() => {
+    fetchLaboratories();
+  }, []);
+
+  const fetchLaboratories = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const profile = await apiFetch(`/users/${user.id}`);
+      
+      const allLabs = await apiFetch('/laboratories');
+      
+      const myLabs = allLabs.filter(lab => 
+        (lab.researcher?.id === profile.researcher?.id) || 
+        (lab.institution?.id === profile.researcher?.affiliation?.id)
+      );
+      
+      setLaboratories(myLabs);
+    } catch (err) {
+      console.error('Error al cargar laboratorios:', err);
+      try {
+        const allLabs = await apiFetch('/laboratories');
+        setLaboratories(allLabs);
+      } catch (e) {
+         setLaboratories([]);
+      }
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,6 +82,7 @@ export default function CreatePublication() {
         type: formData.type,
         authorId: user.id,
         status: true,
+        laboratoryId: formData.laboratoryId ? parseInt(formData.laboratoryId) : null,
       };
 
       await apiFetch('/publications', {
@@ -65,6 +96,7 @@ export default function CreatePublication() {
         title: '',
         description: '',
         type: 'scholarship',
+        laboratoryId: '',
       });
 
       setTimeout(() => navigate('/researcher/publications'), 1200);
@@ -115,6 +147,21 @@ export default function CreatePublication() {
                 <option value="internship">Estancia de Prácticas</option>
                 <option value="project">Proyecto de Colaboración</option>
               </select>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="laboratoryId">
+                Sede / Laboratorio (Opcional)
+              </label>
+              <select id="laboratoryId" name="laboratoryId" value={formData.laboratoryId} onChange={handleChange}>
+                <option value="">No especificar sede</option>
+                {laboratories.map((lab) => (
+                  <option key={lab.id} value={lab.id}>
+                    {lab.name}
+                  </option>
+                ))}
+              </select>
+              <small className="form-hint">Lugar físico donde se realizará el proyecto.</small>
             </div>
           </div>
 

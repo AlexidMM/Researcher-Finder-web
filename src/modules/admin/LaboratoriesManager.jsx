@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { apiFetch } from '../../utils/api';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import './admin.scss';
@@ -14,6 +14,17 @@ let DefaultIcon = L.icon({
   iconAnchor: [12, 41]
 });
 L.Marker.prototype.options.icon = DefaultIcon;
+
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [map]);
+  return null;
+}
 
 function LocationMarker({ position, setPosition, setAddress }) {
   const markerRef = useRef(null);
@@ -93,11 +104,11 @@ export default function LaboratoriesManager() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [labsData, instData, resData] = await Promise.all([
-        apiFetch('/laboratories'),
-        apiFetch('/institutions'),
-        apiFetch('/researchers'),
-      ]);
+      // Usamos llamadas independientes para evitar que un fallo en una tire todo el módulo
+      const labsData = await apiFetch('/laboratories').catch(() => []);
+      const instData = await apiFetch('/institutions').catch(() => []);
+      const resData = await apiFetch('/researchers').catch(() => []);
+
       setLaboratories(labsData || []);
       setInstitutions(instData || []);
       setResearchers(resData || []);
@@ -247,12 +258,13 @@ export default function LaboratoriesManager() {
           <div className="admin-form-group">
             <label>Ubicación (Haz clic en el mapa o arrastra el pin)</label>
             
-            {/* Contenedor del Mapa */}
+            {/* Contenedor del Mapa con el resicer automático */}
             <div style={{ height: '300px', width: '100%', marginBottom: '1rem', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd', zIndex: 0 }}>
               <MapContainer center={currentCenter} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
+                <MapResizer />
                 <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
+                  url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
                 />
                 <LocationMarker 
                   position={{ lat: formData.latitude, lng: formData.longitude }} 
